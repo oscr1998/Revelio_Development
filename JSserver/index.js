@@ -66,8 +66,8 @@ io.on('connection', (socket) => {
 
     })
 
-    socket.on("in-game", () => {
-        io.to("123").emit('update-client', players["123"])
+    socket.on("in-game", (room) => {
+        io.to(room).emit('update-client', players[room])
     })
 
     // socket.on("update-server", players_Client => {
@@ -77,10 +77,10 @@ io.on('connection', (socket) => {
     //     socket.emit('update-client', players["123"])
     // })
 
-    socket.on("moved", (coords) => {
-        players["123"][socket.id].x = coords.x
-        players["123"][socket.id].y = coords.y
-        io.to("123").emit('update-client', players["123"])
+    socket.on("moved", (coords, room) => {
+        players[room][socket.id].x = coords.x
+        players[room][socket.id].y = coords.y
+        io.to(room).emit('update-client', players[room])
     })
 
     //todo 

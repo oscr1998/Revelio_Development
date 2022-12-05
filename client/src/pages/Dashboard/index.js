@@ -10,7 +10,9 @@ import { store_roomID, store_socket, update_players } from '../../actions/socket
 
 //! DEVELOPMENT ONLY
 import io from 'socket.io-client';
+
 export let socket
+export let room
 //! DEVELOPMENT ONLY
 
 export default function Dashboard() {
@@ -25,6 +27,7 @@ export default function Dashboard() {
 
     function handleJoinRoom(e){
         e.preventDefault();
+        room = roomID
         socket.emit('join-room', roomID, msg => { 
             console.log(`ID(${msg.id}) has joined room(${msg.room})`);
             dispatch(store_roomID(roomID))
