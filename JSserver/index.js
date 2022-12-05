@@ -13,12 +13,12 @@ const io = require('socket.io')(http, {
 const players = {
     //* Schema
     // room1: {
-    //     id1: { id: "", username: "", character: "", sprite: "" },
-    //     id2: { id: "", username: "", character: "", sprite: "" },
+    //     id1: { id: "", username: "", character: "", x: 0, y: 0 },
+    //     id2: { id: "", username: "", character: "", x: 0, y: 0 },
     // },
     // room2: {
-    //     id1: { id: "", username: "", character: "", sprite: "" },
-    //     id2: { id: "", username: "", character: "", sprite: "" },
+    //     id1: { id: "", username: "", character: "", x: 0, y: 0 },
+    //     id2: { id: "", username: "", character: "", x: 0, y: 0 },
     // },
 }
 
@@ -41,14 +41,23 @@ io.on('connection', (socket) => {
 
     socket.on('start-game', (room) =>{
 
+        // Algorithm to decide who is the seeker
         const listOfPlayers = Object.keys(players[room])    //["id1", "id2"]
         const seekerIdx = Math.floor(Math.random() * listOfPlayers.length)
         const seekerID = listOfPlayers[seekerIdx]
-        listOfPlayers.forEach(id => {
+
+        //Algorithm to decide each players' spawn location
+        const coords = [
+            {x: 10, y:10 },
+            {x: 100, y:100 },
+            {x: 200, y:200 },
+        ]
+
+        listOfPlayers.forEach((id, idx) => {
             if (id === seekerID){
-                players[room][id] = { ...players[room][id], character: "seeker" }
+                players[room][id] = { ...players[room][id], character: "seeker", x: coords[idx].x, y: coords[idx].y }
             } else {
-                players[room][id] = { ...players[room][id], character: "hider" }
+                players[room][id] = { ...players[room][id], character: "hider", x: coords[idx].x, y: coords[idx].y }
             }
         })
         io.to(room).emit('update-room', players[room])
@@ -58,14 +67,27 @@ io.on('connection', (socket) => {
     })
 
     socket.on("in-game", () => {
-        socket.emit('updating', players["123"])
+        io.to("123").emit('update-client', players["123"])
     })
 
-    socket.on("moved", (sprite) => {
-        players["123"][socket.id].sprite = sprite
-        socket.emit('updating', players["123"])
+    // socket.on("update-server", players_Client => {
+    //     Object.keys(players_Client).forEach(id => {
+    //         players["123"][id] = players_Client[id]
+    //     })
+    //     socket.emit('update-client', players["123"])
+    // })
+
+    socket.on("moved", (coords) => {
+        players["123"][socket.id].x = coords.x
+        players["123"][socket.id].y = coords.y
+        io.to("123").emit('update-client', players["123"])
     })
 
+    //todo 
+    socket.on("new-event", (newInfo) => {
+        players["123"][socket.id] = newInfo.x
+        io.to("123").emit('update-client', players["123"])
+    })
 
     // socket.on('join-room', (room, coords, cb) => {
     //     socket.join(room)

@@ -12,7 +12,6 @@ const players = {
 
 
 const gameState = {
-    // socketID: "",
     cursors: "",
 }
 
@@ -26,16 +25,26 @@ class GameScene extends Phaser.Scene {
         this.load.image('codey', 'https://content.codecademy.com/courses/learn-phaser/physics/codey.png');
         this.load.image('bug', 'https://content.codecademy.com/courses/learn-phaser/physics/bug_1.png');
 
+        console.log("preload: ", players);
 
-        socket.on('updating', playersID => {
-            Object.keys(playersID).forEach(id => {
-                players[id] = playersID[id]
+        socket.on('update-client', players_server => {
+
+            Object.keys(players_server).forEach(id => {
+
+                // If sprite is not created locally
+                if(!players[id]){
+                    console.log("init");
+                    // copy the list
+                    players[id] = players_server[id]
+                } else if (id !== socket.id){
+                    console.log("moving");
+                    // update player coords
+                    players[id].sprite.x = players_server[id].x
+                    players[id].sprite.y = players_server[id].y
+                }
             })
         })
         socket.emit("in-game")
-
-        gameState.socketID = socket.id
-
     }
 
     create(){
@@ -44,12 +53,12 @@ class GameScene extends Phaser.Scene {
 
         listOfPlayers.forEach(id => {
             if(players[id].character === "seeker" ){
-                players[id] = { ...players[id], sprite: this.physics.add.sprite(500, 450, 'bug') }
+                players[id] = { ...players[id], sprite: this.physics.add.sprite(players[id].x, players[id].y, 'bug') }
             } else {
-                players[id] = { ...players[id], sprite: this.physics.add.sprite(500, 450, 'codey') }
+                players[id] = { ...players[id], sprite: this.physics.add.sprite(players[id].x, players[id].y, 'codey') }
             }
+            players[id].sprite.setCollideWorldBounds(true);
         })
-
 
         // Initialsed Controls
         gameState.cursors = this.input.keyboard.createCursorKeys();
@@ -61,54 +70,56 @@ class GameScene extends Phaser.Scene {
     update(time, delta){
         // Controls
         if (gameState.cursors.right.isDown) {
-            players[gameState.socketID].sprite.setVelocity(350, 0);
-            players[gameState.socketID].moved = true;
+            players[socket.id].sprite.setVelocity(350, 0);
+            players[socket.id].moved = true;
         } 
         if (gameState.cursors.left.isDown) {
-            players[gameState.socketID].sprite.setVelocity(-350, 0);
-            players[gameState.socketID].moved = true;
+            players[socket.id].sprite.setVelocity(-350, 0);
+            players[socket.id].moved = true;
         } 
         if (gameState.cursors.up.isDown) {
-            players[gameState.socketID].sprite.setVelocity(0, -350);
-            players[gameState.socketID].moved = true;
+            players[socket.id].sprite.setVelocity(0, -350);
+            players[socket.id].moved = true;
         } 
         if (gameState.cursors.down.isDown) {
-            players[gameState.socketID].sprite.setVelocity(0, 350);
-            players[gameState.socketID].moved = true;
+            players[socket.id].sprite.setVelocity(0, 350);
+            players[socket.id].moved = true;
         } 
 
         if (gameState.cursors.right.isDown && gameState.cursors.up.isDown) {
-            players[gameState.socketID].sprite.setVelocity(Math.sqrt((350**2)/2), -Math.sqrt((350**2)/2));
-            players[gameState.socketID].moved = true;
+            players[socket.id].sprite.setVelocity(Math.sqrt((350**2)/2), -Math.sqrt((350**2)/2));
+            players[socket.id].moved = true;
         } 
         if (gameState.cursors.right.isDown && gameState.cursors.down.isDown) {
-            players[gameState.socketID].sprite.setVelocity(Math.sqrt((350**2)/2), Math.sqrt((350**2)/2));
-            players[gameState.socketID].moved = true;
+            players[socket.id].sprite.setVelocity(Math.sqrt((350**2)/2), Math.sqrt((350**2)/2));
+            players[socket.id].moved = true;
         } 
         if (gameState.cursors.left.isDown && gameState.cursors.up.isDown) {
-            players[gameState.socketID].sprite.setVelocity(-Math.sqrt((350**2)/2), -Math.sqrt((350**2)/2));
-            players[gameState.socketID].moved = true;
+            players[socket.id].sprite.setVelocity(-Math.sqrt((350**2)/2), -Math.sqrt((350**2)/2));
+            players[socket.id].moved = true;
         } 
         if (gameState.cursors.left.isDown && gameState.cursors.down.isDown) {
-            players[gameState.socketID].sprite.setVelocity(-Math.sqrt((350**2)/2), Math.sqrt((350**2)/2));
-            players[gameState.socketID].moved = true;
+            players[socket.id].sprite.setVelocity(-Math.sqrt((350**2)/2), Math.sqrt((350**2)/2));
+            players[socket.id].moved = true;
         } 
         if (gameState.cursors.up.isUp && gameState.cursors.down.isUp && gameState.cursors.left.isUp && gameState.cursors.right.isUp){
-            players[gameState.socketID].sprite.setVelocity(0, 0);
-            players[gameState.socketID].moved = false;
+            players[socket.id].sprite.setVelocity(0, 0);
+            players[socket.id].moved = false;
         }
         if (gameState.cursors.space.isDown) {
-            players[gameState.socketID].sprite.x = 500;
-            players[gameState.socketID].sprite.y = 400;
-            players[gameState.socketID].moved = true;
+            players[socket.id].sprite.x = 500;
+            players[socket.id].sprite.y = 400;
+            players[socket.id].moved = true;
         }
 
-        if (players[gameState.socketID].moved){
-            socket.emit('moved', players[gameState.socketID].sprite)
-            // console.log(player.sprite.body.speed);
+        if (players[socket.id].moved){
+            socket.emit('moved', {
+                x: players[socket.id].sprite.x,
+                y: players[socket.id].sprite.y 
+            })
         }
 
-        this.debug("update", delta, players[gameState.socketID].sprite.body.speed)
+        this.debug("update", delta, players[socket.id].sprite.body.speed)
     }
 
     debug(mode, delta = 0.1, velocity=0){
