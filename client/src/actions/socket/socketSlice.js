@@ -5,6 +5,10 @@ export const socketSlice = createSlice({
     initialState: {
         socket: null,
         roomID: "",
+        players: {
+            // id1: { id: "", username: "", character: "", sprite: "" },
+            // id2: { id: "", username: "", character: "", sprite: "" },
+        }
     },
     reducers: {
         store_socket: ( state, action ) => {
@@ -13,9 +17,13 @@ export const socketSlice = createSlice({
         store_roomID: (state, action) => {
             state.roomID = action.payload
         },
+        update_players: (state, action) => {
+            state.players = action.payload
+        }
     },
 })
 
-export const { store_socket, store_roomID } = socketSlice.actions
+export const { store_socket, store_roomID, update_players } = socketSlice.actions
 
 export default socketSlice.reducer
+

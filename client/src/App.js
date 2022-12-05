@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { Routes, Route } from 'react-router-dom';
 
 //* Pages
-import { Menu, NotFound, Leaderboard, Dashboard, Lobby } from './pages';
+import { Menu, NotFound, Leaderboard, Dashboard, Lobby, Game } from './pages';
 
 function App() {
   return (
@@ -11,6 +11,7 @@ function App() {
         <Route path="/" element={<Menu />} />
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/lobby" element={<Lobby />} />
+        <Route path="/game" element={<Game />} />
         <Route path="/leaderboard" element={<Leaderboard />} />
         <Route path="*" element={<NotFound />} />
       </Routes>

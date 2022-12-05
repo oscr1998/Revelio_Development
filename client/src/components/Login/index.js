@@ -3,7 +3,7 @@ import { React, useState } from 'react'
 //* Socket
 import { store_socket } from '../../actions/socket/socketSlice'
 import io from 'socket.io-client';
-const serverEP = "https://localhost:5000/";
+const serverEP = "https://localhost:3030/";
 
 export default function Login() {
 

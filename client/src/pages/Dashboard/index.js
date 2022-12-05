@@ -6,11 +6,11 @@ import { CreateGame } from '../../components';
 
 //* Redux
 import { useSelector, useDispatch } from "react-redux";
-import { store_roomID } from '../../actions/socket/socketSlice'
+import { store_roomID, store_socket, update_players } from '../../actions/socket/socketSlice'
 
 //! DEVELOPMENT ONLY
 import io from 'socket.io-client';
-let socket
+export let socket
 //! DEVELOPMENT ONLY
 
 export default function Dashboard() {
@@ -25,15 +25,23 @@ export default function Dashboard() {
 
     function handleJoinRoom(e){
         e.preventDefault();
-        socket.emit('join-room', roomID)
-        dispatch(store_roomID(roomID))
-        navigate('/lobby')
+        socket.emit('join-room', roomID, msg => { 
+            console.log(`ID(${msg.id}) has joined room(${msg.room})`);
+            dispatch(store_roomID(roomID))
+            navigate('/lobby')
+        })
     }
 
     //! DEVELOPMENT ONLY
     useEffect(()=>{
-        socket = io("https://localhost:5000/");
-        socket.on('connect', () => { console.log(socket.id); })
+        socket = io("http://localhost:3030/");
+        socket.on('connect', () => { 
+            console.log(socket.id);
+            dispatch(store_socket(socket))
+        })
+        socket.on('update-room', (players) => {
+            dispatch(update_players(players))
+        })
     },[])
     //! DEVELOPMENT ONLY
 
