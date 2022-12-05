@@ -1,0 +1,10 @@
+
+html, body, pre, code, kbd, samp {
+    font-family: 'Press Start 2P', cursive;
+}
+
+body{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}

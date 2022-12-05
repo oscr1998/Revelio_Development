@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { Routes, Route } from 'react-router-dom';
-
+import './style.css'
 //* Pages
 import { Menu, NotFound, Leaderboard, Dashboard, Lobby, Game } from './pages';
 
