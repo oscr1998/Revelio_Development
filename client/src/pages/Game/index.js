@@ -1,17 +1,12 @@
-import React, { useEffect } from 'react'
-import Phaser from 'phaser';
+import React from 'react'
 import { config } from '../../game/index'
-
+import { IonPhaser } from '@ion-phaser/react'
 
 export default function Game() {
 
-    useEffect(() => {
-        const game = new Phaser.Game(config)
-    },[])
-
     return (
         <div>
-            {/* <button onClick={()=>{}}></button> */}
+            <IonPhaser game={config} initialize={true}/>
         </div>
     )
 }
