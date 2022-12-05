@@ -6,7 +6,7 @@ export default function Game() {
 
     return (
         <div>
-            <IonPhaser game={config} initialize={true} var={"12321"}/>
+            <IonPhaser game={config} initialize={true}/>
         </div>
     )
 }

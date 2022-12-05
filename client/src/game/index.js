@@ -3,7 +3,8 @@ import Phaser from 'phaser';
 // import { useSelector, useDispatch } from "react-redux";
 // const socket = useSelector(state => state.socket.socket)
 
-import { socket } from '../pages/Dashboard/index'
+import { socket, room } from '../pages/Dashboard/index'
+import { default as controls } from './controls';
 
 const players = {
     // id1: { id: "", username: "", character: "", sprite: "", moved: false },
@@ -46,7 +47,7 @@ class GameScene extends Phaser.Scene {
                 }
             })
         })
-        socket.emit("in-game")
+        socket.emit("in-game", room)
     }
 
     create(){
@@ -71,54 +72,13 @@ class GameScene extends Phaser.Scene {
 
     update(time, delta){
         // Controls
-        if (gameState.cursors.right.isDown) {
-            players[socket.id].sprite.setVelocity(350, 0);
-            players[socket.id].moved = true;
-        } 
-        if (gameState.cursors.left.isDown) {
-            players[socket.id].sprite.setVelocity(-350, 0);
-            players[socket.id].moved = true;
-        } 
-        if (gameState.cursors.up.isDown) {
-            players[socket.id].sprite.setVelocity(0, -350);
-            players[socket.id].moved = true;
-        } 
-        if (gameState.cursors.down.isDown) {
-            players[socket.id].sprite.setVelocity(0, 350);
-            players[socket.id].moved = true;
-        } 
-
-        if (gameState.cursors.right.isDown && gameState.cursors.up.isDown) {
-            players[socket.id].sprite.setVelocity(Math.sqrt((350**2)/2), -Math.sqrt((350**2)/2));
-            players[socket.id].moved = true;
-        } 
-        if (gameState.cursors.right.isDown && gameState.cursors.down.isDown) {
-            players[socket.id].sprite.setVelocity(Math.sqrt((350**2)/2), Math.sqrt((350**2)/2));
-            players[socket.id].moved = true;
-        } 
-        if (gameState.cursors.left.isDown && gameState.cursors.up.isDown) {
-            players[socket.id].sprite.setVelocity(-Math.sqrt((350**2)/2), -Math.sqrt((350**2)/2));
-            players[socket.id].moved = true;
-        } 
-        if (gameState.cursors.left.isDown && gameState.cursors.down.isDown) {
-            players[socket.id].sprite.setVelocity(-Math.sqrt((350**2)/2), Math.sqrt((350**2)/2));
-            players[socket.id].moved = true;
-        } 
-        if (gameState.cursors.up.isUp && gameState.cursors.down.isUp && gameState.cursors.left.isUp && gameState.cursors.right.isUp){
-            players[socket.id].sprite.setVelocity(0, 0);
-            players[socket.id].moved = false;
-        }
-        if (gameState.cursors.space.isDown) {
-            players[socket.id].sprite.x = 500;
-            players[socket.id].sprite.y = 400;
-            players[socket.id].moved = true;
-        }
+        controls(gameState.cursors, players[socket.id], 350)
 
         if (players[socket.id].moved){
             socket.emit('moved', {
                 x: players[socket.id].sprite.x,
                 y: players[socket.id].sprite.y 
-            })
+            }, room)
         }
 
         this.debug("update", delta, players[socket.id].sprite.body.speed)
