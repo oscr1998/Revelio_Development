@@ -41,6 +41,8 @@ class GameScene extends Phaser.Scene {
                     // update player coords
                     players[id].sprite.x = players_server[id].x
                     players[id].sprite.y = players_server[id].y
+                } else if (id !== socket.id){
+                    // update whatever you want
                 }
             })
         })
