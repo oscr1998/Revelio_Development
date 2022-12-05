@@ -15,7 +15,7 @@ export default function Menu() {
             
             <Login />
 
-            <button onClick={() => setRegModel(true)} className="nes-btn is-primary">Register</button>
+            <button id='joinbtn' onClick={() => setRegModel(true)} className="nes-btn is-primary">Register</button>
             {regModel? <Register  setRegModel={setRegModel}/> : null}
             
             <button className="nes-btn">
