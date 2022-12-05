@@ -10,6 +10,8 @@ const players = {
     // id2: { id: "", username: "", character: "", sprite: "", moved: false },
 }
 
+let seeker = [];
+let hider = [];
 
 const gameState = {
     cursors: "",
@@ -59,6 +61,28 @@ class GameScene extends Phaser.Scene {
             }
             players[id].sprite.setCollideWorldBounds(true);
         })
+
+        // listOfPlayers.forEach(id => {
+        //     if(players[id].character === "seeker" ){
+        //         seeker = players[id]
+        //     } else {
+        //         hider.push(players[id])
+        //     }
+        // })
+        const listOfHiders = Object.values(players).filter(p => p.character !== "seeker")
+        const listOfSeekers= Object.values(players).filter(p => p.character !== "hider")
+        console.log("listOfHiders", listOfHiders)
+        console.log("listOfSeekers", listOfSeekers)
+        listOfHiders.forEach(id => {
+            this.physics.add.collider(listOfSeekers[0].sprite, id.sprite, function(){
+                console.log("Collision detected")
+                id.sprite.destroy()
+            })
+        })
+
+        
+        console.log("hider", hider)
+        console.log("seeker", seeker)
 
         // Initialsed Controls
         gameState.cursors = this.input.keyboard.createCursorKeys();
@@ -119,6 +143,14 @@ class GameScene extends Phaser.Scene {
             })
         }
 
+
+        // console.log("character", players[socket.id].character)
+
+        // if( players[socket.id].character === "seeker"){
+            
+        // }
+        
+
         this.debug("update", delta, players[socket.id].sprite.body.speed)
     }
 
@@ -147,6 +179,7 @@ export const config = {
         arcade: {
         gravity: { y: 0 },
         enableBody: true,
+        debug : true
         }
     },
     scene: [GameScene]
