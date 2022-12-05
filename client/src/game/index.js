@@ -60,6 +60,7 @@ class GameScene extends Phaser.Scene {
                 players[id] = { ...players[id], sprite: this.physics.add.sprite(players[id].x, players[id].y, 'codey') }
             }
             players[id].sprite.setCollideWorldBounds(true);
+            players[id].sprite.body.immovable = true
         })
 
         // listOfPlayers.forEach(id => {
@@ -76,7 +77,7 @@ class GameScene extends Phaser.Scene {
         listOfHiders.forEach(id => {
             this.physics.add.collider(listOfSeekers[0].sprite, id.sprite, function(){
                 console.log("Collision detected")
-                id.sprite.destroy()
+                // id.sprite.destroy()
             })
         })
 
