@@ -50,7 +50,7 @@ export default function Login() {
                 <br />
             </label>
 
-            <input type="submit" value="Login" className='nes-btn is-success'/>
+            <input id='loginbtn' type="submit" value="Login" className='nes-btn is-success'/>
         </form>
     )
 }

@@ -1,0 +1,18 @@
+#dashboardContainer {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    margin-top: 30% ;
+}
+
+#dash1cont {
+    padding-bottom: 25px;
+}
+
+#dash2cont {
+    
+}
+
+#h1dashboard {
+    margin: 0;
+}
