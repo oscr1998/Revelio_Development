@@ -1,5 +1,5 @@
 import { React, useState } from 'react'
-
+import './style.css'
 //* Socket
 import { store_socket } from '../../actions/socket/socketSlice'
 import io from 'socket.io-client';
@@ -24,7 +24,7 @@ export default function Login() {
     }
 
     return (
-        <form onSubmit={handelLogin}>
+        <form onSubmit={handelLogin} className="nes-field">
             <h1>Login</h1>
             <label>Username:
                 <input 
@@ -32,7 +32,8 @@ export default function Login() {
                     type="text" 
                     placeholder='Username' 
                     value={loginInfo.username} 
-                    onChange={(e) => { setLoginInfo({...loginInfo, username: e.target.value }) }} 
+                    onChange={(e) => { setLoginInfo({...loginInfo, username: e.target.value }) }}
+                    className = "nes-input usrNm"
                 />
                 <br />
             </label>
@@ -44,11 +45,12 @@ export default function Login() {
                     placeholder='Password' 
                     value={loginInfo.password} 
                     onChange={(e) => { setLoginInfo({...loginInfo, password: e.target.value }) }} 
+                    className = "nes-input usrNm"
                 />
                 <br />
             </label>
 
-            <input type="submit" value="Login" />
+            <input type="submit" value="Login" className='nes-btn is-success'/>
         </form>
     )
 }
