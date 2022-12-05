@@ -52,7 +52,6 @@ io.on('connection', (socket) => {
             {x: 100, y:100 },
             {x: 200, y:200 },
         ]
-
         listOfPlayers.forEach((id, idx) => {
             if (id === seekerID){
                 players[room][id] = { ...players[room][id], character: "seeker", x: coords[idx].x, y: coords[idx].y }
