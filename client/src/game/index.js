@@ -1,8 +1,4 @@
 import Phaser from 'phaser';
-
-// import { useSelector, useDispatch } from "react-redux";
-// const socket = useSelector(state => state.socket.socket)
-
 import { socket, room } from '../pages/Dashboard/index'
 import { default as controls } from './controls';
 
