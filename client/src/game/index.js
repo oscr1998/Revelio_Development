@@ -27,7 +27,7 @@ const gameState = {
     cursors: "",
 }
 
-export let props = ["basket","branch","flower","loghouse","rocks","smallstump","stump","tree","tree2" ]
+export let props = ["basket", "branch", "flower", "loghouse", "rocks", "smallstump", "stump", "tree", "tree2"]
 
 
 class GameScene extends Phaser.Scene {
@@ -106,9 +106,10 @@ class GameScene extends Phaser.Scene {
 
 
 
-        this.timeMessage = this.add.text(800, 0, "Timer: " + this.Timer, {  fontSize: "32px" ,align: 'right' }).setScrollFactor(0);
-        
-    
+        this.timeMessage = this.add.text(800, 0, "Timer: " + this.Timer, { fontSize: "32px", align: 'right' }).setScrollFactor(0);
+
+
+
         this.countdown = this.time.addEvent({
             delay: 1000, //calls reduceTime every 1 second
             callback: this.reduceTime,
@@ -116,10 +117,9 @@ class GameScene extends Phaser.Scene {
             repeat: -1,
         });
 
-
         listOfPlayers.forEach(id => {
             if (players[id].character === "seeker") {
-                players[id] = { ...players[id], sprite: this.physics.add.sprite(players[id].x, players[id].y, 'characters', 1) }
+                players[id] = { ...players[id], sprite: this.physics.add.sprite(players[id].x, players[id].y, 'bug') }
                 // players[id].sprite.setScale(this.scaleSize)
             } else {
                 players[id] = { ...players[id], sprite: this.physics.add.sprite(players[id].x, players[id].y, 'codey') }
@@ -167,7 +167,7 @@ class GameScene extends Phaser.Scene {
         if (this.Timer <= 0) {
             //stop game and move to next scene
             this.countdown.destroy();
-       
+
         }
     }
 
@@ -175,7 +175,7 @@ class GameScene extends Phaser.Scene {
     update(time, delta) {
         // Controls
 
-       
+
 
         controls(gameState.cursors, players[socket.id], 350, players[socket.id].character, players[socket.id].isAlive)
 
@@ -281,12 +281,8 @@ class GameScene extends Phaser.Scene {
 
 export const config = {
     type: Phaser.AUTO,
-    scale: {
-        width: 1000,
-        height: 800,
-        autoCenter: Phaser.Scale.CENTER_BOTH,
-    
-      },
+    width: 1000,
+    height: 800,
     backgroundColor: "131313",
     physics: {
         default: 'arcade',
