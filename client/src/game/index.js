@@ -12,8 +12,6 @@ import TilesetHouse from './assets/level/TilesetHouse.png'
 // import TilesetReliefDetail from './assets/level/TilesetReliefDetail.png'
 import jsonMap from './assets/level/level_map.json'
 
-
-
 import { socket, room } from '../pages/Dashboard/index'
 import { default as controls } from './controls';
 
@@ -28,6 +26,8 @@ let listOfPlayers;
 const gameState = {
     cursors: "",
 }
+
+export let props = ["basket","branch","flower","loghouse","rocks","smallstump","stump","tree","tree2" ]
 
 
 class GameScene extends Phaser.Scene {
@@ -45,10 +45,16 @@ class GameScene extends Phaser.Scene {
         // Assets
         this.load.image('codey', 'https://content.codecademy.com/courses/learn-phaser/physics/codey.png');
         this.load.image('bug', 'https://content.codecademy.com/courses/learn-phaser/physics/bug_1.png');
-
         this.load.image('ghost', ghost)
 
-        this.load.spritesheet('characters', TilesetNature, { frameWidth: 32, frameHeight: 32})
+
+        this.load.spritesheet('natureSheet', TilesetNature, { frameWidth: 16, frameHeight: 16 });
+        this.load.spritesheet('natureSheetLarge', TilesetNature, { frameWidth: 32, frameHeight: 32 });
+        // props.forEach(p => {
+        //     this.load.image(`${p}_prop`, `${p}.png`)
+        // })
+        // this.load.spritesheet('characters', TilesetNature, { frameWidth: 32, frameHeight: 32 } )
+
 
         //************background layer*********** //
         this.load.image('background', TilesetFloor)
@@ -168,12 +174,11 @@ class GameScene extends Phaser.Scene {
 
     update(time, delta) {
         // Controls
-        // console.log("TIME****************", Math.floor(time / 1000))
-        // const currentTime = Math.floor(time / 1000)
 
-        // this.timeMessage.setText("Timer: "  currentTime)
+       
 
-        controls(gameState.cursors, players[socket.id], 350)
+        controls(gameState.cursors, players[socket.id], 350, players[socket.id].character, players[socket.id].isAlive)
+
 
         if (players[socket.id].moved) {
             socket.emit('moved', {
