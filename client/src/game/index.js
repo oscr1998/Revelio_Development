@@ -12,8 +12,6 @@ import TilesetHouse from './assets/level/TilesetHouse.png'
 // import TilesetReliefDetail from './assets/level/TilesetReliefDetail.png'
 import jsonMap from './assets/level/level_map.json'
 
-
-
 import { socket, room } from '../pages/Dashboard/index'
 import { default as controls } from './controls';
 
@@ -29,6 +27,8 @@ const gameState = {
     cursors: "",
 }
 
+export let props = ["basket","branch","flower","loghouse","rocks","smallstump","stump","tree","tree2" ]
+
 class GameScene extends Phaser.Scene {
     constructor() {
         super('GameScene')
@@ -43,9 +43,12 @@ class GameScene extends Phaser.Scene {
         // Assets
         this.load.image('codey', 'https://content.codecademy.com/courses/learn-phaser/physics/codey.png');
         this.load.image('bug', 'https://content.codecademy.com/courses/learn-phaser/physics/bug_1.png');
-
         this.load.image('ghost', ghost)
-
+        this.load.spritesheet('natureSheet', TilesetNature, { frameWidth: 16, frameHeight: 16 });
+        this.load.spritesheet('natureSheetLarge', TilesetNature, { frameWidth: 32, frameHeight: 32 });
+        // props.forEach(p => {
+        //     this.load.image(`${p}_prop`, `${p}.png`)
+        // })
         // this.load.spritesheet('characters', TilesetNature, { frameWidth: 32, frameHeight: 32 } )
 
         //************background layer*********** //
@@ -129,7 +132,6 @@ class GameScene extends Phaser.Scene {
                 id.isAlive = false
             })
         })
- 
         // console.log("hider", hider)
         // console.log("seeker", seeker)
 
@@ -141,7 +143,7 @@ class GameScene extends Phaser.Scene {
 
     update(time, delta) {
         // Controls
-        controls(gameState.cursors, players[socket.id], 350)
+        controls(gameState.cursors, players[socket.id], 350, players[socket.id].character, players[socket.id].isAlive)
 
         if (players[socket.id].moved) {
             socket.emit('moved', {
