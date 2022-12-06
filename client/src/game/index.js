@@ -174,10 +174,7 @@ class GameScene extends Phaser.Scene {
         // this.add.image(0, 0, "background")
         this.levelMap = this.make.tilemap({ key: 'map' });
 
-        /**
-         * add tileset image to map 
-         * first arg name in json. 2nd arg name in this.load.image
-        **/
+        
 
         //adding tileset for background layer
         this.tiles = this.levelMap.addTilesetImage('TilesetFloor', 'background')
