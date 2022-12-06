@@ -2,6 +2,7 @@ import { React, useEffect, useState } from 'react'
 import { useNavigate } from "react-router-dom";
 import './styles.css';
 import { Zoom, Flip } from 'react-reveal';
+import { AnimatePresence } from "framer-motion";
 
 //* Components
 import { CreateGame } from '../../components';

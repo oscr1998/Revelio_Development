@@ -1,0 +1,22 @@
+#createForm {
+    width: clamp(50%, 700px, 90%);
+    height: min(50%, 300px);
+    margin: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: aliceblue;
+}
+
+.createpopup{
+    border: none;
+}
+
+.nes-select {
+    width: 130%;
+}
+#formlabel1 {
+    display: flex;
+    width: 130%;
+}

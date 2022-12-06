@@ -1,10 +1,4 @@
-#menuContainer{
-    display: flex;
-    align-items: center;
-    flex-direction: column;
-}
-
-.loginContainer{
+.lobbycontainer{
     display: flex;
     justify-content: center;
     flex-direction: column;
