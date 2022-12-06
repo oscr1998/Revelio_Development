@@ -1,0 +1,12 @@
+#registerh1 {
+    color: aliceblue;
+}
+
+#registerForm {
+    width: clamp(50%, 700px, 90%);
+    height: min(50%, 300px);
+    margin: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}

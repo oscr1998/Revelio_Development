@@ -1,11 +1,30 @@
 import { React, useState } from 'react'
+import { motion } from "framer-motion";
+import Backdrop from "../Backdrop";
+import './style.css'
 
-// TODO: Make a CSS for this model:
-//TODO     - position fixed (overlay the whole page)
-//TODO     - grey background
-//TODO     - white model in the middle of the page
+const dropIn = {
+    hidden: {
+        y: "-100vh",
+        opacity: 0
+    },
+    visible: {
+        y: '0',
+        opacity: 1,
+        transition: {
+            duration: 0.1,
+            type: "spring",
+            damping: 25,
+            stiffness: 500
+        }
+    },
+    exit: {
+        y: "100vh",
+        opacity: 0
+    }
+}
 
-export default function Register({setRegModel={setRegModel}}) {
+export default function Register({handleClose}) {
 
     const [regInfo, setRegInfo] = useState({
         username: "",
@@ -26,7 +45,7 @@ export default function Register({setRegModel={setRegModel}}) {
             //todo Send register detail to backend
             //todo upon successful post request: 
             //todo      - render a msg: Registered
-            //todo      - setRegModel(false)
+            //todo      - setRegOpen(false)
             //todo if failed:
             //todo      - render an error msg
         }
@@ -34,16 +53,16 @@ export default function Register({setRegModel={setRegModel}}) {
 
 
     return (
-        <form onSubmit={handelRegister}>
-            <h1>Register</h1>
-            <div>
-                <button 
-                    onClick={() => {
-                        setRegModel(false)
-                        return false
-                    }}
-                >x</button>
-            </div>
+        <Backdrop onClick={handleClose}>
+            <motion.div
+            onClick={(e) => e.stopPropagation()}
+            variants={dropIn}
+            initial="hidden"
+            animate="visible"
+            exit="exit"
+            >
+        <form id='registerForm' onSubmit={handelRegister}>
+            <h1 id='registerh1'>Register</h1>
 
             <label>Username:
                 <input 
@@ -105,5 +124,8 @@ export default function Register({setRegModel={setRegModel}}) {
             <input type="submit" value="Submit" />
 
         </form>
+        <button onClick={handleClose}>Close</button>
+        </motion.div>
+        </Backdrop>
     )
 }
