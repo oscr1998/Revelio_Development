@@ -48,13 +48,14 @@ io.on('connection', (socket) => {
 
         //Algorithm to decide each players' spawn location
         const coords = [
-            {x: 10, y:10 },
-            {x: 100, y:100 },
-            {x: 200, y:200 },
+            {x: 300, y:300 },
+            {x: 400, y:400 },
+            {x: 500, y:500 },
         ]
         listOfPlayers.forEach((id, idx) => {
             if (id === seekerID){
                 players[room][id] = { ...players[room][id], character: "seeker", x: coords[idx].x, y: coords[idx].y }
+
             } else {
                 players[room][id] = { ...players[room][id], character: "hider", x: coords[idx].x, y: coords[idx].y }
             }

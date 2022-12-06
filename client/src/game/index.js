@@ -29,7 +29,7 @@ class GameScene extends Phaser.Scene {
     }
     init(){
       
-        this.scaleSize = 1;
+        this.scaleSize = 2;
         console.log("init file", this.scaleSize)
     }
 
@@ -87,15 +87,19 @@ class GameScene extends Phaser.Scene {
 
         listOfPlayers.forEach(id => {
             if (players[id].character === "seeker") {
-                players[id] = { ...players[id], sprite: this.physics.add.sprite(players[id].x, players[id].y, 'characters', 4) }
-            
+                players[id] = { ...players[id], sprite: this.physics.add.sprite(players[id].x, players[id].y, 'characters', 1) }
+                players[id].sprite.setScale(this.scaleSize)
+               
             } else {
                 players[id] = { ...players[id], sprite: this.physics.add.sprite(players[id].x, players[id].y, 'codey') }
+                
             }
+
             players[id].sprite.setCollideWorldBounds(true);
             players[id].sprite.body.immovable = true
+            this.physics.add.collider(this.blockedLayer, players[id].sprite)
         })
-
+        this.cameras.main.startFollow(players[socket.id].sprite);
         // listOfPlayers.forEach(id => {
         //     if(players[id].character === "seeker" ){
         //         seeker = players[id]
@@ -110,6 +114,7 @@ class GameScene extends Phaser.Scene {
         listOfHiders.forEach(id => {
             this.physics.add.collider(listOfSeekers[0].sprite, id.sprite, function () {
                 console.log("Collision detected")
+                this.physics.add.collider(this.blockedLayer, players[id])
                 // id.sprite.destroy()
             })
         })
@@ -232,5 +237,7 @@ export const config = {
             debug: true
         }
     },
+    pixelArt: true,
+    roundPixels: true,
     scene: [GameScene]
 }
