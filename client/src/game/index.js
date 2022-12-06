@@ -232,9 +232,9 @@ export const config = {
     physics: {
         default: 'arcade',
         arcade: {
-        gravity: { y: 0 },
-        enableBody: true,
-        debug : true
+            gravity: { y: 0 },
+            enableBody: true,
+            debug: true
         }
     },
     pixelArt: true,
