@@ -54,7 +54,7 @@ export default function CreateGame({
           animate="visible"
           exit="exit"
         >
-          <div className="loginContainer createpopup  nes-container is-centered">
+          <div className="loginContainer createpopup nes-container is-centered">
             <h1>Create Game</h1>
             <button
               onClick={() => {

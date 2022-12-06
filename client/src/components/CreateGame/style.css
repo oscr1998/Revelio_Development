@@ -9,8 +9,9 @@
     color: aliceblue;
 }
 
-.createpopup{
+.createpopup {
     border: none;
+    background-color: transparent;
 }
 
 .nes-select {
