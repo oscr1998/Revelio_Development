@@ -50,7 +50,7 @@ export default function Dashboard() {
     //! DEVELOPMENT ONLY
 
     return (
-        <div id='dashboardContainer'>
+        <div id='dashboardContainer' className='loginContainer nes-container is-centered'>
             <div id='dash1cont' style={{float:"left"}}>
                 <h1 id='h1dashboard'>Player Icon</h1>
                 <h1>Username</h1>
@@ -58,7 +58,7 @@ export default function Dashboard() {
             </div>
             <div id='dash2cont' style={{float:"right"}}>
             <form onSubmit={handleJoinRoom}>
-                <input
+                <input id='roominput'
                     required
                     type="text"
                     placeholder='Room ID' 
@@ -66,9 +66,9 @@ export default function Dashboard() {
                     onChange={(e) => setRoomID(e.target.value) } 
                 />
                 <br />
-                <input type="submit" value="Join Game" />
+                <input className='nes-btn is-success' type="submit" value="Join Game" />
             </form>
-            <button onClick={() => setCreateGameModel(true)}>Create A Game</button>
+            <button className="nes-btn is-primary" onClick={() => setCreateGameModel(true)}>Create Game</button>
             </div>
             { createGameModel? <CreateGame  setCreateGameModel={setCreateGameModel}/> : null }
         </div>

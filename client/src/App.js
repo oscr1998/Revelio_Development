@@ -4,6 +4,7 @@ import './style.css'
 //* Pages
 import { Menu, NotFound, Leaderboard, Dashboard, Lobby, Game } from './pages';
 
+
 function App() {
   return (
     <div className="App">
