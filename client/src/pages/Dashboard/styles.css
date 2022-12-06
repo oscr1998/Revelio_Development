@@ -1,0 +1,22 @@
+#dashboardContainer {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    margin-top: 30% ;
+}
+
+#dash1cont {
+    padding-bottom: 25px;
+}
+
+#roominput {
+    margin-bottom: 7.5%;
+}
+
+#h1dashboard {
+    margin: 0;
+}
+
+/* .nes-btn.is-success {
+    width: 200px
+} */

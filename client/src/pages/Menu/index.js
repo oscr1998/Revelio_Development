@@ -2,7 +2,8 @@ import { React, useState } from 'react'
 import { Login, Register } from '../../components'
 import { Link } from 'react-router-dom';
 import './style.css'
-import Zoom from 'react-reveal/Zoom';
+import { Zoom, Flip } from 'react-reveal';
+
 
 export default function Menu() {
 
@@ -10,17 +11,17 @@ export default function Menu() {
 
     return (
         <div id='menuContainer'>
-        <h1>Logo</h1>
+        <h1 id='h1menu'>Logo</h1>
         <Zoom><div className='loginContainer nes-container is-centered'>
             
             <Login />
 
-            <button onClick={() => setRegModel(true)} className="nes-btn is-primary">Register</button>
+            <Flip><button id='joinbtn' onClick={() => setRegModel(true)} className="nes-btn is-primary">Register</button></Flip>
             {regModel? <Register  setRegModel={setRegModel}/> : null}
             
-            <button className="nes-btn">
+            <Flip><button className="nes-btn">
                 <Link to='/leaderboard'>Leaderboard</Link>
-            </button>
+            </button></Flip>
             
         </div>
         </Zoom>
