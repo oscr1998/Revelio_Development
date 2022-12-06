@@ -1,4 +1,7 @@
-export default function controls(cursors, player, velocity ){
+import {props, propListLarge, propListSmall} from './index'
+import { socket, room } from '../pages/Dashboard/index'
+
+export default function controls(cursors, player, velocity, character, isAlive){
     const angledVelocity = Math.sqrt((velocity**2)/2)
     if (cursors.right.isDown) {
         player.sprite.setVelocity(velocity, 0);
@@ -37,9 +40,28 @@ export default function controls(cursors, player, velocity ){
         player.sprite.setVelocity(0, 0);
         player.moved = false;
     }
-    if (cursors.space.isDown) {
-        player.sprite.x = 500;
-        player.sprite.y = 400;
-        player.moved = true;
+    if (cursors.space.isDown && character === "hider") {
+        console.log("space pressed")
+        const randomSize = Math.floor(Math.random()*2)
+        const randomId = randomSize ? Math.floor(Math.random()*propListSmall.length) : Math.floor(Math.random()*propListLarge.length)
+        socket.emit('changedProp', room, randomSize, randomId)
+        
+        // if(randomSize === 1){
+        //     let randomId = Math.floor(Math.random()*propListLarge.length)
+
+        //     player.sprite.setTexture("natureSheetLarge", propListLarge[randomId]).setScale(2).setSize(32, 32)
+
+        //     console.log("large")
+        //     socket.emit('changedProp',room)
+        // } else {
+        //     let randomId = Math.floor(Math.random()*propListSmall.length)
+
+        //     player.sprite.setTexture("natureSheet", propListSmall[randomId]).setScale(2).setSize(16, 16)
+
+        //     console.log("small", randomId)
+        //     socket.emit('changedProp',room)
+        // }
+        
+        console.log("sprite:", player.sprite)
     }
 }
