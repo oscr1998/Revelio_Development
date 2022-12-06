@@ -9,11 +9,11 @@ import { Menu, NotFound, Leaderboard, Dashboard, Lobby, Game } from './pages';
 function App() {
   return (
     <div className="App">
-      <div className="circlesContainer">
+      {/* <div className="circlesContainer">
           {
             Array(10).fill().map((i, index) => (<img key={index} className="circles" src={shuriken} alt="pokeball"></img>))
           }
-        </div>
+        </div> */}
       <Routes>
         <Route path="/" element={<Menu />} />
         <Route path="/dashboard" element={<Dashboard />} />
