@@ -20,6 +20,10 @@ const players = {
 
 let seeker = [];
 let hider = [];
+
+export const propListSmall =[176, 149, 132]
+export const propListLarge =[0, 1, 33, 50]
+
 let listOfPlayers;
 const gameState = {
     cursors: "",
@@ -86,6 +90,9 @@ class GameScene extends Phaser.Scene {
                     players[id].sprite.x = players_server[id].x
                     players[id].sprite.y = players_server[id].y
                     players[id].isAlive = players_server[id].isAlive
+                    players[id].propIndices = players_server[id].propIndices
+                    
+                    // players[id] = players_server[id]
                 } else if (id !== socket.id) {
                     // update whatever you want
 
@@ -193,6 +200,15 @@ class GameScene extends Phaser.Scene {
             if (players[id].isAlive === false) {
                 players[id].sprite.setTexture('ghost').setScale(0.1).setOrigin(0.5)
             }
+            
+            if(players[id].propIndices !== null){
+                if(players[id].propIndices[0] === 1){
+                    players[id].sprite.setTexture("natureSheetLarge", propListLarge[players[id].propIndices[1]]).setScale(2).setSize(32, 32)
+                }else{
+                    players[id].sprite.setTexture("natureSheet", propListSmall[players[id].propIndices[1]]).setScale(2).setSize(16, 16)
+                }
+            }
+            
         })
 
 

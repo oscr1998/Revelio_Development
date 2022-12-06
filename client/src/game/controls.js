@@ -1,4 +1,5 @@
-import {props} from './index'
+import {props, propListLarge, propListSmall} from './index'
+import { socket, room } from '../pages/Dashboard/index'
 
 export default function controls(cursors, player, velocity, character, isAlive){
     const angledVelocity = Math.sqrt((velocity**2)/2)
@@ -41,21 +42,26 @@ export default function controls(cursors, player, velocity, character, isAlive){
     }
     if (cursors.space.isDown && character === "hider") {
         console.log("space pressed")
-        let randomSize = Math.floor(Math.random()*2)
-        let propListSmall =[176, 149, 132]
-        let propListLarge =[0, 1, 33, 50]
-        if(randomSize === 1){
-            let randomId = Math.floor(Math.random()*propListLarge.length)
-            player.sprite.setTexture("natureSheetLarge", propListLarge[randomId]).setScale(2).setSize(32, 32)
-            console.log("large")
-        } else {
-            let randomId = Math.floor(Math.random()*propListSmall.length)
-            player.sprite.setTexture("natureSheet", propListSmall[randomId]).setScale(2).setSize(16, 16)
-            console.log("small", randomId)
-        }
+        const randomSize = Math.floor(Math.random()*2)
+        const randomId = randomSize ? Math.floor(Math.random()*propListSmall.length) : Math.floor(Math.random()*propListLarge.length)
+        socket.emit('changedProp', room, randomSize, randomId)
         
-        // player.sprite.setTexture("natureSheetLarge", 1)
-        // player.sprite.setTexture(props[Math.floor(Math.random()*props.length)])
+        // if(randomSize === 1){
+        //     let randomId = Math.floor(Math.random()*propListLarge.length)
+
+        //     player.sprite.setTexture("natureSheetLarge", propListLarge[randomId]).setScale(2).setSize(32, 32)
+
+        //     console.log("large")
+        //     socket.emit('changedProp',room)
+        // } else {
+        //     let randomId = Math.floor(Math.random()*propListSmall.length)
+
+        //     player.sprite.setTexture("natureSheet", propListSmall[randomId]).setScale(2).setSize(16, 16)
+
+        //     console.log("small", randomId)
+        //     socket.emit('changedProp',room)
+        // }
+        
         console.log("sprite:", player.sprite)
     }
 }
