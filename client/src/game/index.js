@@ -29,12 +29,14 @@ const gameState = {
 
 export let props = ["basket","branch","flower","loghouse","rocks","smallstump","stump","tree","tree2" ]
 
+
 class GameScene extends Phaser.Scene {
     constructor() {
         super('GameScene')
     }
-    init(){
+    init() {
         this.scaleSize = 2;
+        this.Timer = 10;
         console.log("init file", this.scaleSize)
     }
 
@@ -44,12 +46,15 @@ class GameScene extends Phaser.Scene {
         this.load.image('codey', 'https://content.codecademy.com/courses/learn-phaser/physics/codey.png');
         this.load.image('bug', 'https://content.codecademy.com/courses/learn-phaser/physics/bug_1.png');
         this.load.image('ghost', ghost)
+
+
         this.load.spritesheet('natureSheet', TilesetNature, { frameWidth: 16, frameHeight: 16 });
         this.load.spritesheet('natureSheetLarge', TilesetNature, { frameWidth: 32, frameHeight: 32 });
         // props.forEach(p => {
         //     this.load.image(`${p}_prop`, `${p}.png`)
         // })
         // this.load.spritesheet('characters', TilesetNature, { frameWidth: 32, frameHeight: 32 } )
+
 
         //************background layer*********** //
         this.load.image('background', TilesetFloor)
@@ -65,7 +70,7 @@ class GameScene extends Phaser.Scene {
         // this.load.image('mine', TilesetReliefDetail)
         this.load.tilemapTiledJSON('map', jsonMap);
 
-        
+
         console.log("preload: ", players);
 
         socket.on('update-client', players_server => {
@@ -78,15 +83,15 @@ class GameScene extends Phaser.Scene {
                     // copy the list
                     players[id] = players_server[id]
 
-                } else if (id !== socket.id){
+                } else if (id !== socket.id) {
                     // console.log("player_Server", players_server[id]);
                     // update player coords
                     players[id].sprite.x = players_server[id].x
                     players[id].sprite.y = players_server[id].y
                     players[id].isAlive = players_server[id].isAlive
-                } else if (id !== socket.id){
+                } else if (id !== socket.id) {
                     // update whatever you want
-                    
+
                 }
             })
         })
@@ -99,13 +104,26 @@ class GameScene extends Phaser.Scene {
         this.createMap();
         listOfPlayers = Object.keys(players) //["id1", "id2"]
 
+
+
+        this.timeMessage = this.add.text(800, 0, "Timer: " + this.Timer, {  fontSize: "32px" ,align: 'right' }).setScrollFactor(0);
+        
+    
+        this.countdown = this.time.addEvent({
+            delay: 1000, //calls reduceTime every 1 second
+            callback: this.reduceTime,
+            callbackScope: this,
+            repeat: -1,
+        });
+
+
         listOfPlayers.forEach(id => {
             if (players[id].character === "seeker") {
-                players[id] = { ...players[id], sprite: this.physics.add.sprite(players[id].x, players[id].y, 'bug') }
+                players[id] = { ...players[id], sprite: this.physics.add.sprite(players[id].x, players[id].y, 'characters', 1) }
                 // players[id].sprite.setScale(this.scaleSize)
             } else {
                 players[id] = { ...players[id], sprite: this.physics.add.sprite(players[id].x, players[id].y, 'codey') }
-                
+
             }
 
             players[id].sprite.setCollideWorldBounds(true);
@@ -115,9 +133,9 @@ class GameScene extends Phaser.Scene {
 
 
         listOfPlayers.forEach(id => {
-            if(!players[id].character === "seeker" ){
+            if (!players[id].character === "seeker") {
                 players[id] = { ...players[id], isAlive: true }
-            } 
+            }
         })
 
         this.cameras.main.startFollow(players[socket.id].sprite);
@@ -132,6 +150,7 @@ class GameScene extends Phaser.Scene {
                 id.isAlive = false
             })
         })
+
         // console.log("hider", hider)
         // console.log("seeker", seeker)
 
@@ -141,9 +160,25 @@ class GameScene extends Phaser.Scene {
         gameState.cursors = this.input.keyboard.createCursorKeys();
     }
 
+    reduceTime() {
+        this.Timer -= 1;
+        this.timeMessage.setText("Timer: " + this.Timer);
+        console.log(this.Timer)
+        if (this.Timer <= 0) {
+            //stop game and move to next scene
+            this.countdown.destroy();
+       
+        }
+    }
+
+
     update(time, delta) {
         // Controls
+
+       
+
         controls(gameState.cursors, players[socket.id], 350, players[socket.id].character, players[socket.id].isAlive)
+
 
         if (players[socket.id].moved) {
             socket.emit('moved', {
@@ -152,18 +187,18 @@ class GameScene extends Phaser.Scene {
             }, room)
         }
 
-        if(players[socket.id].isAlive === false){
+        if (players[socket.id].isAlive === false) {
             console.log("you are dead")
-            socket.emit('killed',room)
+            socket.emit('killed', room)
         }
 
         listOfPlayers.forEach(id => {
-            if(players[id].isAlive === false ){
+            if (players[id].isAlive === false) {
                 players[id].sprite.setTexture('ghost').setScale(0.1).setOrigin(0.5)
-            } 
+            }
         })
-        
-        
+
+
         // console.log("character", players[socket.id].character)
 
         // if( players[socket.id].character === "seeker"){
@@ -246,8 +281,12 @@ class GameScene extends Phaser.Scene {
 
 export const config = {
     type: Phaser.AUTO,
-    width: 1000,
-    height: 800,
+    scale: {
+        width: 1000,
+        height: 800,
+        autoCenter: Phaser.Scale.CENTER_BOTH,
+    
+      },
     backgroundColor: "131313",
     physics: {
         default: 'arcade',
