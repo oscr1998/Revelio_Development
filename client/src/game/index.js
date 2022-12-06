@@ -34,7 +34,6 @@ class GameScene extends Phaser.Scene {
         super('GameScene')
     }
     init(){
-      
         this.scaleSize = 2;
         console.log("init file", this.scaleSize)
     }
@@ -93,6 +92,7 @@ class GameScene extends Phaser.Scene {
     }
 
     create() {
+        console.log("ACCESSED #################")
         this.createMap();
         const listOfPlayers = Object.keys(players) //["id1", "id2"]
 
@@ -100,7 +100,6 @@ class GameScene extends Phaser.Scene {
             if (players[id].character === "seeker") {
                 players[id] = { ...players[id], sprite: this.physics.add.sprite(players[id].x, players[id].y, 'characters', 1) }
                 players[id].sprite.setScale(this.scaleSize)
-               
             } else {
                 players[id] = { ...players[id], sprite: this.physics.add.sprite(players[id].x, players[id].y, 'codey') }
                 
@@ -146,7 +145,6 @@ class GameScene extends Phaser.Scene {
 
         // Debugging
         this.debug("create")
-      
         // Initialsed Controls
         gameState.cursors = this.input.keyboard.createCursorKeys();
     }
