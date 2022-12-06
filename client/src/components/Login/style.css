@@ -2,3 +2,11 @@
     background-color: white;
     border: solid black 3px;
 }
+
+.nes-btn.is-success {
+    margin-bottom: 2%;
+}
+
+.nes-btn.is-primary {
+    margin-bottom: 2.5%;
+}

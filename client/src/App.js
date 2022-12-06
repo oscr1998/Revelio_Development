@@ -5,6 +5,7 @@ import shuriken from './components/images/shuriken.png'
 //* Pages
 import { Menu, NotFound, Leaderboard, Dashboard, Lobby, Game } from './pages';
 
+
 function App() {
   return (
     <div className="App">
