@@ -6,10 +6,10 @@ import ghost from '../components/images/ghost.png'
 
 import TilesetFloor from './assets/level/TilesetFloor.png'
 import TilesetWater from './assets/level/TilesetWater.png'
-import TilesetFloorDetail from './assets/level/TilesetFloorDetail.png'
+// import TilesetFloorDetail from './assets/level/TilesetFloorDetail.png'
 import TilesetNature from './assets/level/TilesetNature.png'
 import TilesetHouse from './assets/level/TilesetHouse.png'
-import TilesetReliefDetail from './assets/level/TilesetReliefDetail.png'
+// import TilesetReliefDetail from './assets/level/TilesetReliefDetail.png'
 import jsonMap from './assets/level/level_map.json'
 
 
@@ -46,7 +46,7 @@ class GameScene extends Phaser.Scene {
 
         this.load.image('ghost', ghost)
 
-        this.load.spritesheet('characters', TilesetNature, { frameWidth: 32, frameHeight: 32 } )
+        // this.load.spritesheet('characters', TilesetNature, { frameWidth: 32, frameHeight: 32 } )
 
         //************background layer*********** //
         this.load.image('background', TilesetFloor)
@@ -94,12 +94,12 @@ class GameScene extends Phaser.Scene {
     create() {
         console.log("ACCESSED #################")
         this.createMap();
-        const listOfPlayers = Object.keys(players) //["id1", "id2"]
+        listOfPlayers = Object.keys(players) //["id1", "id2"]
 
         listOfPlayers.forEach(id => {
             if (players[id].character === "seeker") {
-                players[id] = { ...players[id], sprite: this.physics.add.sprite(players[id].x, players[id].y, 'characters', 1) }
-                players[id].sprite.setScale(this.scaleSize)
+                players[id] = { ...players[id], sprite: this.physics.add.sprite(players[id].x, players[id].y, 'bug') }
+                // players[id].sprite.setScale(this.scaleSize)
             } else {
                 players[id] = { ...players[id], sprite: this.physics.add.sprite(players[id].x, players[id].y, 'codey') }
                 
@@ -117,15 +117,7 @@ class GameScene extends Phaser.Scene {
             } 
         })
 
-
         this.cameras.main.startFollow(players[socket.id].sprite);
-        // listOfPlayers.forEach(id => {
-        //     if(players[id].character === "seeker" ){
-        //         seeker = players[id]
-        //     } else {
-        //         hider.push(players[id])
-        //     }
-        // })
 
         const listOfHiders = Object.values(players).filter(p => p.character !== "seeker")
         const listOfSeekers = Object.values(players).filter(p => p.character !== "hider")
@@ -134,12 +126,10 @@ class GameScene extends Phaser.Scene {
         listOfHiders.forEach(id => {
             this.physics.add.collider(listOfSeekers[0].sprite, id.sprite, function () {
                 console.log("Collision detected")
-                this.physics.add.collider(this.blockedLayer, players[id])
                 id.isAlive = false
             })
         })
-
-        
+ 
         // console.log("hider", hider)
         // console.log("seeker", seeker)
 
