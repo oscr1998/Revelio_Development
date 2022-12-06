@@ -1,11 +1,11 @@
 import Phaser from 'phaser';
-import TilesetFloor from '../assets/level/TilesetFloor.png'
-import TilesetWater from '../assets/level/TilesetWater.png'
-import TilesetFloorDetail from '../assets/level/TilesetFloorDetail.png'
-import TilesetNature from '../assets/level/TilesetNature.png'
-import TilesetHouse from '../assets/level/TilesetHouse.png'
-import TilesetReliefDetail from '../assets/level/TilesetReliefDetail.png'
-import jsonMap from '../assets/level/level_map.json'
+import TilesetFloor from './assets/level/TilesetFloor.png'
+import TilesetWater from './assets/level/TilesetWater.png'
+import TilesetFloorDetail from './assets/level/TilesetFloorDetail.png'
+import TilesetNature from './assets/level/TilesetNature.png'
+import TilesetHouse from './assets/level/TilesetHouse.png'
+import TilesetReliefDetail from './assets/level/TilesetReliefDetail.png'
+import jsonMap from './assets/level/level_map.json'
 
 
 import { socket, room } from '../pages/Dashboard/index'
@@ -38,19 +38,19 @@ class GameScene extends Phaser.Scene {
         // Assets
         this.load.image('codey', 'https://content.codecademy.com/courses/learn-phaser/physics/codey.png');
         this.load.image('bug', 'https://content.codecademy.com/courses/learn-phaser/physics/bug_1.png');
-
+        this.load.spritesheet('characters', TilesetNature, { frameWidth: 32, frameHeight: 32 } )
 
         //************background layer*********** //
         this.load.image('background', TilesetFloor)
         this.load.image('water', TilesetWater)
 
         //************decoration layer*********** //
-        this.load.image('floor', TilesetFloorDetail)
+        // this.load.image('floor', TilesetFloorDetail)
 
         //************blocked layer*********** //
         this.load.image('nature', TilesetNature)
         this.load.image('house', TilesetHouse)
-        this.load.image('mine', TilesetReliefDetail)
+        // this.load.image('mine', TilesetReliefDetail)
         this.load.tilemapTiledJSON('map', jsonMap);
 
         
@@ -87,7 +87,8 @@ class GameScene extends Phaser.Scene {
 
         listOfPlayers.forEach(id => {
             if (players[id].character === "seeker") {
-                players[id] = { ...players[id], sprite: this.physics.add.sprite(players[id].x, players[id].y, 'bug') }
+                players[id] = { ...players[id], sprite: this.physics.add.sprite(players[id].x, players[id].y, 'characters', 4) }
+            
             } else {
                 players[id] = { ...players[id], sprite: this.physics.add.sprite(players[id].x, players[id].y, 'codey') }
             }
@@ -117,11 +118,13 @@ class GameScene extends Phaser.Scene {
         console.log("hider", hider)
         console.log("seeker", seeker)
 
-        // Initialsed Controls
-        gameState.cursors = this.input.keyboard.createCursorKeys();
+        
 
         // Debugging
         this.debug("create")
+      
+        // Initialsed Controls
+        gameState.cursors = this.input.keyboard.createCursorKeys();
     }
 
     update(time, delta) {
