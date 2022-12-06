@@ -1,8 +1,7 @@
 import Phaser from 'phaser';
-
 // import { useSelector, useDispatch } from "react-redux";
 // const socket = useSelector(state => state.socket.socket)
-
+import ghost from '../components/images/ghost.png'
 import { socket, room } from '../pages/Dashboard/index'
 import { default as controls } from './controls';
 
@@ -13,7 +12,7 @@ const players = {
 
 let seeker = [];
 let hider = [];
-
+let listOfPlayers;
 const gameState = {
     cursors: "",
 }
@@ -27,6 +26,7 @@ class GameScene extends Phaser.Scene {
         // Assets
         this.load.image('codey', 'https://content.codecademy.com/courses/learn-phaser/physics/codey.png');
         this.load.image('bug', 'https://content.codecademy.com/courses/learn-phaser/physics/bug_1.png');
+        this.load.image('ghost', ghost)
 
         console.log("preload: ", players);
 
@@ -40,12 +40,14 @@ class GameScene extends Phaser.Scene {
                     // copy the list
                     players[id] = players_server[id]
                 } else if (id !== socket.id){
-                    console.log("moving");
+                    // console.log("player_Server", players_server[id]);
                     // update player coords
                     players[id].sprite.x = players_server[id].x
                     players[id].sprite.y = players_server[id].y
+                    players[id].isAlive = players_server[id].isAlive
                 } else if (id !== socket.id){
                     // update whatever you want
+                    
                 }
             })
         })
@@ -53,8 +55,7 @@ class GameScene extends Phaser.Scene {
     }
 
     create(){
-
-        const listOfPlayers = Object.keys(players) //["id1", "id2"]
+        listOfPlayers = Object.keys(players) //["id1", "id2"]
 
         listOfPlayers.forEach(id => {
             if(players[id].character === "seeker" ){
@@ -66,13 +67,12 @@ class GameScene extends Phaser.Scene {
             players[id].sprite.body.immovable = true
         })
 
-        // listOfPlayers.forEach(id => {
-        //     if(players[id].character === "seeker" ){
-        //         seeker = players[id]
-        //     } else {
-        //         hider.push(players[id])
-        //     }
-        // })
+        listOfPlayers.forEach(id => {
+            if(!players[id].character === "seeker" ){
+                players[id] = { ...players[id], isAlive: true }
+            } 
+        })
+
         const listOfHiders = Object.values(players).filter(p => p.character !== "seeker")
         const listOfSeekers= Object.values(players).filter(p => p.character !== "hider")
         console.log("listOfHiders", listOfHiders)
@@ -80,13 +80,13 @@ class GameScene extends Phaser.Scene {
         listOfHiders.forEach(id => {
             this.physics.add.collider(listOfSeekers[0].sprite, id.sprite, function(){
                 console.log("Collision detected")
-                // id.sprite.destroy()
+                id.isAlive = false
             })
         })
 
         
-        console.log("hider", hider)
-        console.log("seeker", seeker)
+        // console.log("hider", hider)
+        // console.log("seeker", seeker)
 
         // Initialsed Controls
         gameState.cursors = this.input.keyboard.createCursorKeys();
@@ -106,7 +106,18 @@ class GameScene extends Phaser.Scene {
             }, room)
         }
 
+        if(players[socket.id].isAlive === false){
+            console.log("you are dead")
+            socket.emit('killed',room)
+        }
 
+        listOfPlayers.forEach(id => {
+            if(players[id].isAlive === false ){
+                players[id].sprite.setTexture('ghost').setScale(0.1).setOrigin(0.5)
+            } 
+        })
+        
+        
         // console.log("character", players[socket.id].character)
 
         // if( players[socket.id].character === "seeker"){
