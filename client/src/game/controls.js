@@ -45,7 +45,7 @@ export default function controls(cursors, player, velocity, character, isAlive){
         let propListSmall =[176, 149, 132]
         let propListLarge =[0, 1, 33, 50]
         if(randomSize === 1){
-            let randomId = Math.floor(Math.random()*propListSmall.length)
+            let randomId = Math.floor(Math.random()*propListLarge.length)
             player.sprite.setTexture("natureSheetLarge", propListLarge[randomId]).setScale(2).setSize(32, 32)
             console.log("large")
         } else {
