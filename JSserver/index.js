@@ -102,8 +102,9 @@ io.on('connection', (socket) => {
         io.to(room).emit('update-client', players[room])
     })
 
-    socket.on("changedProp", (room, randomId, randomSize) => {
+    socket.on("changedProp", (room, randomSize, randomId) => {
         players[room][socket.id].propIndices = [randomSize, randomId]
+        console.log("prop socket", players[room][socket.id].propIndices)
         io.to(room).emit('update-client', players[room])
     })
 
