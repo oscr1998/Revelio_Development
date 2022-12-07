@@ -24,9 +24,20 @@ export default function Dashboard() {
     const dispatch = useDispatch();
 
     // const socket = useSelector(state => state.socket.socket)
+    const isLogin = localStorage.getItem('isLogin');
+
 
     const [ createGameModel, setCreateGameModel ] = useState(false)
     const [ roomID, setRoomID ] = useState("123")
+
+    useEffect(() => {
+        console.log("ping!!");
+        if(isLogin == "false"){
+            navigate('/')
+        } else if (isLogin == "true"){
+
+        }
+    }, [isLogin])
 
     function handleJoinRoom(e){
         e.preventDefault();
@@ -37,6 +48,14 @@ export default function Dashboard() {
             navigate('/lobby')
         })
     }
+
+    function handleLogout(){
+        localStorage.clear();
+        navigate('/')
+    }
+
+
+
 
     //! DEVELOPMENT ONLY
     useEffect(()=>{
@@ -53,6 +72,7 @@ export default function Dashboard() {
 
     return (
         <Zoom><div id='dashboardContainer' className='loginContainer nes-container is-centered'>
+            <button onClick={handleLogout}>Logout</button>
             <div id='dash1cont' style={{float:"left"}}>
                 <h1 id='h1dashboard'>Player Icon</h1>
                 <h1>Username</h1>

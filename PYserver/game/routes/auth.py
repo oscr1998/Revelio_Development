@@ -1,4 +1,4 @@
-from flask import Blueprint, jsonify, request
+from flask import Blueprint, jsonify, request, redirect, url_for
 from werkzeug import exceptions
 
 #* Login
@@ -14,6 +14,13 @@ from ..models.user import User
 from ..database.db import db
 
 auth = Blueprint("auth", __name__)
+
+@auth.route("/home")
+def home():
+    if (current_user.is_authenticated):
+        return jsonify(current_user)
+    else :
+        return "redirect to login page"
 
 @auth.route("/login", methods=['POST'])
 def login():
@@ -166,4 +173,8 @@ def stats_update():
         "games_played": current_user.games_played,
     }
     return jsonify(stats)
+
+@auth.errorhandler(exceptions.Unauthorized)
+def handle_401(err):
+    return redirect(url_for('auth.home'))
 

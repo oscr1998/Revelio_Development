@@ -40,7 +40,7 @@ def create_app():
         db.init_app(app)
         
     @app.route("/")
-    def home():
+    def API():
         return "<h1>Welcome to the Revelio API</h1>"
     
     #* Route
