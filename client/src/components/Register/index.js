@@ -2,7 +2,7 @@ import { React, useState } from "react";
 import { motion } from "framer-motion";
 import Backdrop from "../Backdrop";
 import "./style.css";
-import axios from 'axios'
+import axios from "axios";
 import { useSelector } from "react-redux";
 
 const dropIn = {
@@ -27,8 +27,7 @@ const dropIn = {
 };
 
 export default function Register({ handleClose }) {
-
-  const Flask_URI = useSelector(state => state.flask.URI)
+  const Flask_URI = useSelector((state) => state.flask.URI);
 
   const [regInfo, setRegInfo] = useState({
     username: "",
@@ -38,41 +37,43 @@ export default function Register({ handleClose }) {
     confirmPassword: "",
   });
 
-  const [regErrMsg, setRegErrMsg] = useState(null)
+  const [regErrMsg, setRegErrMsg] = useState(null);
 
   function handelRegister(e) {
     e.preventDefault();
     if (regInfo.email !== regInfo.confirmEmail) {
-      setRegErrMsg("Email does not match")
+      setRegErrMsg("Email does not match");
     } else if (regInfo.password !== regInfo.confirmPassword) {
-      setRegErrMsg("Password does not match")
+      setRegErrMsg("Password does not match");
     } else {
       // kyl1g16.ecs@gmail.com
-      setRegErrMsg("Processing with your data...")
-      axios.post(`${Flask_URI}/register`, {
+      setRegErrMsg("Processing with your data...");
+      axios
+        .post(`${Flask_URI}/register`, {
           username: regInfo.username,
           password: regInfo.password,
           email: regInfo.email,
-      })
-      .then((res)=> {
-          if(res.status === 201){
-            setRegErrMsg("Register successful! \nRedirect to login in 3")
+        })
+        .then((res) => {
+          if (res.status === 201) {
+            setRegErrMsg("Register successful! \nRedirect to login in 3");
             let counter = 3;
-            setInterval(()=>{
-              setRegErrMsg(`Register successful! \nRedirecting to login in ${counter}`)
-              counter --
+            setInterval(() => {
+              setRegErrMsg(
+                `Register successful! \nRedirecting to login in ${counter}`
+              );
+              counter--;
               if (counter === 0) {
-                handleClose(false)
+                handleClose(false);
               }
-            },1000)
+            }, 1000);
           } else {
             console.warn("Something wired at register");
           }
-      })
-      .catch((err) => {
-        setRegErrMsg(err.response.data.message)
-      });
-
+        })
+        .catch((err) => {
+          setRegErrMsg(err.response.data.message);
+        });
     }
   }
 
@@ -89,17 +90,18 @@ export default function Register({ handleClose }) {
         <form id="registerForm" onSubmit={handelRegister}>
           <h1 id="registerh1">Register</h1>
 
-          <button className="closebtn"
+          <button
+            className="closebtn"
             onClick={() => {
-              handleClose()
+              handleClose();
             }}
           >
             x
           </button>
 
           <label>
-            Username:
             <input
+              className="registerinputs"
               required
               type="text"
               placeholder="Username"
@@ -112,8 +114,8 @@ export default function Register({ handleClose }) {
           </label>
 
           <label>
-            Email:
             <input
+              className="registerinputs"
               required
               type="email"
               placeholder="Email"
@@ -126,8 +128,8 @@ export default function Register({ handleClose }) {
           </label>
 
           <label>
-            Confirm Email:
             <input
+              className="registerinputs"
               required
               type="email"
               placeholder="Confirm Email"
@@ -140,8 +142,8 @@ export default function Register({ handleClose }) {
           </label>
 
           <label>
-            Password:
             <input
+              className="registerinputs"
               required
               type="password"
               minLength="8"
@@ -155,8 +157,8 @@ export default function Register({ handleClose }) {
           </label>
 
           <label>
-            Confirm Password:
             <input
+              className="registerinputs"
               required
               type="password"
               minLength="8"
@@ -169,7 +171,7 @@ export default function Register({ handleClose }) {
             <br />
           </label>
           <h3>{regErrMsg}</h3>
-          <input type="submit" value="Submit" />
+          <input id="registersubmitbtn" type="submit" value="Submit" />
         </form>
       </motion.div>
     </Backdrop>

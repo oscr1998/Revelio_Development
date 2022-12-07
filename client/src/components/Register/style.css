@@ -13,6 +13,11 @@
     color: white;
 }
 
-#registerForm input {
-    width: 100%;
+.registerinputs{
+    margin-top: 5%;
+}
+
+#registersubmitbtn {
+    margin-top: 10px;
+    width: 40%;
 }
