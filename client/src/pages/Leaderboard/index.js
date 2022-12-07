@@ -18,7 +18,7 @@ export default function Leaderboard() {
 	
 			<div className="leaderboard">
 
-				<h1>Leaderboard</h1>
+				<h1 className='leaderboardh1'>Leaderboard</h1>
 	
 				<table>
 					<tbody>

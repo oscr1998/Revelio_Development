@@ -4,6 +4,7 @@ import { default as controls } from './controls';
 
 //* Assets
 import ghost from '../components/images/ghost.png'
+
 import TilesetFloor from './assets/level/TilesetFloor.png'
 import TilesetWater from './assets/level/TilesetWater.png'
 // import TilesetFloorDetail from './assets/level/TilesetFloorDetail.png'
@@ -12,6 +13,8 @@ import TilesetHouse from './assets/level/TilesetHouse.png'
 // import TilesetReliefDetail from './assets/level/TilesetReliefDetail.png'
 import jsonMap from './assets/level/level_map.json'
 
+import fire from './assets/characters/fire1.png'
+import ninja from './assets/characters/ninja.png'
 import jsonMap2 from './assets/level2/level_map.json'
 
 export const propListSmall = [175, 176, 149, 132, 215, 202, 199]
@@ -39,11 +42,12 @@ class GameScene extends Phaser.Scene {
         this.load.image('codey', 'https://content.codecademy.com/courses/learn-phaser/physics/codey.png');
         this.load.image('bug', 'https://content.codecademy.com/courses/learn-phaser/physics/bug_1.png');
         this.load.image('ghost', ghost)
-
+        // this.load.image('fire', fireGuy)
+        this.textures.addBase64('fire', fire)
+        this.textures.addBase64('ninja', ninja)
         this.load.spritesheet('natureSheet', TilesetNature, { frameWidth: 16, frameHeight: 16 });
         this.load.spritesheet('natureSheetLarge', TilesetNature, { frameWidth: 32, frameHeight: 32 });
         // this.load.spritesheet('characters', TilesetNature, { frameWidth: 32, frameHeight: 32 } )
-
 
         //************background layer*********** //
         this.load.image('background', TilesetFloor)
@@ -84,7 +88,7 @@ class GameScene extends Phaser.Scene {
 
     create() {
         this.createMap();
-
+        
         // Initialsed Controls
         this.cursors = this.input.keyboard.createCursorKeys();
 
@@ -102,10 +106,10 @@ class GameScene extends Phaser.Scene {
         // Add sprites for every player depends on their character type
         this.listOfPlayers.forEach(id => {
             if (this.players[id].character === "seeker") {
-                this.players[id] = { ...this.players[id], sprite: this.physics.add.sprite(this.players[id].x, this.players[id].y, 'bug') }
+                this.players[id] = { ...this.players[id], sprite: this.physics.add.sprite(this.players[id].x, this.players[id].y, 'fire').setSize(16,24)}
                 // players[id].sprite.setScale(this.scaleSize)
             } else {
-                this.players[id] = { ...this.players[id], sprite: this.physics.add.sprite(this.players[id].x, this.players[id].y, 'codey') }
+                this.players[id] = { ...this.players[id], sprite: this.physics.add.sprite(this.players[id].x, this.players[id].y, 'ninja').setScale(1.5)}
             }
             this.players[id].sprite.setCollideWorldBounds(true);
             this.players[id].sprite.body.immovable = true
@@ -113,7 +117,14 @@ class GameScene extends Phaser.Scene {
             this.physics.add.collider(this.blockedLayer2, this.players[id].sprite)
         })
 
-        this.cameras.main.startFollow(this.players[socket.id].sprite);        
+
+        // this.listOfPlayers.forEach(id => {
+        //     if (!players[id].character === "seeker") {
+        //         players[id] = { ...players[id], isAlive: true }
+        //     }
+        // })
+
+        this.cameras.main.startFollow(this.players[socket.id].sprite);
 
         // Set collision for every player
         this.listOfHiders = Object.values(this.players).filter(p => p.character === "hider")
@@ -171,7 +182,9 @@ class GameScene extends Phaser.Scene {
                     this.players[id].sprite.setTexture("natureSheet", propListSmall[this.players[id].propIndices[1]]).setScale(2).setSize(16, 16)
                 }
             }
+            
         })
+
 
         this.debug("update", delta, this.players[socket.id].sprite.body.speed)
     }
