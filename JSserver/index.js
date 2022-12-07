@@ -54,10 +54,22 @@ io.on('connection', (socket) => {
         ]
         listOfPlayers.forEach((id, idx) => {
             if (id === seekerID){
-                players[room][id] = { ...players[room][id], character: "seeker", x: coords[idx].x, y: coords[idx].y, propIndices: null }
+                players[room][id] = { 
+                    ...players[room][id], 
+                    character: "seeker", 
+                    isAlive: true, 
+                    x: coords[idx].x, 
+                    y: coords[idx].y, 
+                    propIndices: null }
 
             } else {
-                players[room][id] = { ...players[room][id], character: "hider", x: coords[idx].x, y: coords[idx].y, propIndices: null }
+                players[room][id] = { 
+                    ...players[room][id], 
+                    character: "hider",
+                    isAlive: true, 
+                    x: coords[idx].x, 
+                    y: coords[idx].y, 
+                    propIndices: null }
             }
         })
         io.to(room).emit('update-room', players[room])
@@ -86,6 +98,7 @@ io.on('connection', (socket) => {
     //todo 
     socket.on("killed", (room) => {
         players[room][socket.id].isAlive = false
+        players[room][socket.id].propIndices = null
         io.to(room).emit('update-client', players[room])
     })
 

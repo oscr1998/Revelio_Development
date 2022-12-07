@@ -40,7 +40,7 @@ export default function controls(cursors, player, velocity, character, isAlive){
         player.sprite.setVelocity(0, 0);
         player.moved = false;
     }
-    if (cursors.space.isDown && character === "hider") {
+    if (cursors.space.isDown && character === "hider" && isAlive === true ) {
         console.log("space pressed")
         const randomSize = Math.floor(Math.random()*2)
         const randomId = randomSize ? Math.floor(Math.random()*propListSmall.length) : Math.floor(Math.random()*propListLarge.length)
