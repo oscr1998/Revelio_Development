@@ -66,11 +66,6 @@ export default function controls(cursors, player, velocity, character, isAlive, 
     
             console.log("sprite:", player.sprite)
         }
-
-        
-
-
-
     }
 }
 
