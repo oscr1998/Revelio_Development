@@ -20,3 +20,12 @@
 #leaderboardlink {
     color: whitesmoke;
 }
+
+.pwdcontainer {
+    font-size: 60%;
+    margin-top: 5%; 
+}
+
+.pwdlink {
+    padding: 15px;
+}

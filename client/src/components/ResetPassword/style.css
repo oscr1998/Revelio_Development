@@ -1,22 +1,13 @@
-#registerh1 {
+#reseth1 {
     color: aliceblue;
 }
 
-#registerForm {
+#resetForm {
     width: clamp(50%, 700px, 90%);
     height: min(50%, 300px);
     margin: auto;
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
     color: white;
-}
-
-#registerForm input {
-    width: 100%;
-}
-
-.motiondiv{
-    
 }

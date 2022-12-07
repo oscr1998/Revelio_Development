@@ -1,5 +1,5 @@
 import { React, useState } from "react";
-import { Login, Register } from "../../components";
+import { Login, Register, ForgotPwd, ResetPwd } from "../../components";
 import { Link } from "react-router-dom";
 import "./style.css";
 import { Zoom, Flip } from "react-reveal";
@@ -8,8 +8,14 @@ import { AnimatePresence } from "framer-motion";
 
 export default function Menu() {
   const [regOpen, setRegOpen] = useState(false);
-  const close = () => setRegOpen(false);
-  const open = () => setRegOpen(true);
+  const closereg = () => setRegOpen(false);
+  const openreg = () => setRegOpen(true);
+  const [fpwdOpen, setfPwdOpen] = useState(false);
+  const closefpwd = () => setfPwdOpen(false);
+  const openfpwd = () => setfPwdOpen(true);
+  const [rpwdOpen, setrPwdOpen] = useState(false);
+  const closerpwd = () => setrPwdOpen(false);
+  const openrpwd = () => setrPwdOpen(true);
 
   return (
     <div id="menuContainer">
@@ -21,7 +27,7 @@ export default function Menu() {
           <Flip>
             <button
               id="registerbtn"
-              onClick={() => (regOpen ? close() : open())}
+              onClick={() => (regOpen ? closereg() : openreg())}
               className="nes-btn is-primary"
             >
               Register
@@ -33,14 +39,52 @@ export default function Menu() {
             exitBeforeEnter={true}
             onExitComplete={() => null}
           >
-            {regOpen && <Register regOpen={regOpen} handleClose={close} />}
+            {regOpen && <Register regOpen={regOpen} handleClose={closereg} />}
           </AnimatePresence>
 
           <Flip>
             <button className="leaderboardbtn nes-btn">
-              <Link id='leaderboardlink' to="/leaderboard">Leaderboard</Link>
+              <Link id="leaderboardlink" to="/leaderboard">
+                Leaderboard
+              </Link>
             </button>
           </Flip>
+
+          <div className="pwdcontainer">
+            <Link
+              className="pwdlink"
+              onClick={() => (fpwdOpen ? closefpwd() : openfpwd())}
+            >
+              Forgot Password
+            </Link>
+
+            <AnimatePresence
+              initial={false}
+              exitBeforeEnter={true}
+              onExitComplete={() => null}
+            >
+              {fpwdOpen && (
+                <ForgotPwd fpwdOpen={fpwdOpen} handleClose={closefpwd} />
+              )}
+            </AnimatePresence>
+
+            <Link
+              className="pwdlink"
+              onClick={() => (rpwdOpen ? closerpwd() : openrpwd())}
+            >
+              Reset Password
+            </Link>
+
+            <AnimatePresence
+              initial={false}
+              exitBeforeEnter={true}
+              onExitComplete={() => null}
+            >
+              {rpwdOpen && (
+                <ResetPwd rpwdOpen={rpwdOpen} handleClose={closerpwd} />
+              )}
+            </AnimatePresence>
+          </div>
         </div>
       </Zoom>
     </div>
