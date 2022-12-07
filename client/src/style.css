@@ -1,7 +1,23 @@
-html, body {
+html, body, pre, code, kbd, samp {
+    font-family: 'Press Start 2P', cursive;
+}
+
+body{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    min-height: 100vh;
+}
+
+button, input {
+	box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+}
+
+/* html, body {
 	margin:0;
 	height:100%;
-}
+} */
 /* .backgroundContainer{
 	display: block;
 	position: absolute;

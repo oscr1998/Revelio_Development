@@ -6,10 +6,12 @@ export default function controls(cursors, player, velocity, character, isAlive){
     if (cursors.right.isDown) {
         player.sprite.setVelocity(velocity, 0);
         player.moved = true;
+        player.sprite.flipX =true
     } 
     if (cursors.left.isDown) {
         player.sprite.setVelocity(-velocity, 0);
         player.moved = true;
+        player.sprite.flipX =false
     } 
     if (cursors.up.isDown) {
         player.sprite.setVelocity(0, -velocity);
@@ -23,18 +25,22 @@ export default function controls(cursors, player, velocity, character, isAlive){
     if (cursors.right.isDown && cursors.up.isDown) {
         player.sprite.setVelocity(angledVelocity, -angledVelocity);
         player.moved = true;
+        player.sprite.flipX =true
     } 
     if (cursors.right.isDown && cursors.down.isDown) {
         player.sprite.setVelocity(angledVelocity, angledVelocity);
         player.moved = true;
+        player.sprite.flipX =true
     } 
     if (cursors.left.isDown && cursors.up.isDown) {
         player.sprite.setVelocity(-angledVelocity, -angledVelocity);
         player.moved = true;
+        player.sprite.flipX =false
     } 
     if (cursors.left.isDown && cursors.down.isDown) {
         player.sprite.setVelocity(-angledVelocity, angledVelocity);
         player.moved = true;
+        player.sprite.flipX =false
     } 
     if (cursors.up.isUp && cursors.down.isUp && cursors.left.isUp && cursors.right.isUp){
         player.sprite.setVelocity(0, 0);
@@ -44,6 +50,7 @@ export default function controls(cursors, player, velocity, character, isAlive){
         console.log("space pressed")
         const randomSize = Math.floor(Math.random()*2)
         const randomId = randomSize ? Math.floor(Math.random()*propListSmall.length) : Math.floor(Math.random()*propListLarge.length)
+        console.log("RANDOM ID", randomId)
         socket.emit('changedProp', room, randomSize, randomId)
         
         // if(randomSize === 1){
