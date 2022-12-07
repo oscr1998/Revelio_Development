@@ -38,8 +38,9 @@ export default function Login() {
         .then((res)=> {
             if(res.status === 200){
                 localStorage.setItem("isLogin", true)
+                localStorage.setItem("username", loginInfo.username)
+                localStorage.setItem("password", loginInfo.password)
                 setloginErrMsg("")
-                console.log(res);
             } else {
                 console.warn("Something wired at login");
             }

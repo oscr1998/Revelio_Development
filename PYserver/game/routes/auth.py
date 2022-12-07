@@ -4,7 +4,7 @@ from werkzeug import exceptions
 #* Login
 from flask_login import login_user, logout_user, login_required, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
-from tool import get_random_string
+from tool import get_random_string, get_random_avatar
 
 #* Email
 from flask_mail import Mail, Message
@@ -31,6 +31,17 @@ def login():
     foundUsername = User.query.filter_by(username=str(userData['username'])).first()
     if (foundUsername and check_password_hash(foundUsername.password, userData['password'])):
         login_user(foundUsername, remember=True)
+        
+        #? Cheating
+        stats = { 
+            "avatar_url": current_user.avatar_url,
+            "wins": current_user.wins,
+            "wins_as_hunter": current_user.wins_as_hunter,
+            "games_played": current_user.games_played,
+        }
+        return jsonify(stats), 200
+        #? Cheating 
+        
         return "Logged in!", 200
     raise exceptions.BadRequest(f"Failed login! \nIncorrect login details")
 
@@ -63,7 +74,8 @@ def register():
             OTP = get_random_string(),
             wins = 0, 
             wins_as_hunter = 0, 
-            games_played = 0
+            games_played = 0,
+            avatar_url = get_random_avatar(),
             )
         db.session.add(new_user)
         db.session.commit()
@@ -137,6 +149,7 @@ def logout():
 @login_required
 def profile():
     stats = { 
+        "avatar_url": current_user.avatar_url,
         "wins": current_user.wins,
         "wins_as_hunter": current_user.wins_as_hunter,
         "games_played": current_user.games_played,
