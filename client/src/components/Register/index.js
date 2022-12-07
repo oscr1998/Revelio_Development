@@ -90,12 +90,7 @@ export default function Register({ handleClose }) {
         <form id="registerForm" onSubmit={handelRegister}>
           <h1 id="registerh1">Register</h1>
 
-          <button
-            className="closebtn"
-            onClick={() => {
-              handleClose();
-            }}
-          >
+          <button className="closebtn" onClick={handleClose}>
             x
           </button>
 
@@ -115,7 +110,7 @@ export default function Register({ handleClose }) {
 
           <label>
             <input
-              className="registerinputs"
+            className="registerinputs"
               required
               type="email"
               placeholder="Email"
@@ -129,7 +124,7 @@ export default function Register({ handleClose }) {
 
           <label>
             <input
-              className="registerinputs"
+            className="registerinputs"
               required
               type="email"
               placeholder="Confirm Email"
@@ -143,7 +138,7 @@ export default function Register({ handleClose }) {
 
           <label>
             <input
-              className="registerinputs"
+            className="registerinputs"
               required
               type="password"
               minLength="8"
@@ -158,7 +153,7 @@ export default function Register({ handleClose }) {
 
           <label>
             <input
-              className="registerinputs"
+            className="registerinputs"
               required
               type="password"
               minLength="8"
@@ -170,8 +165,8 @@ export default function Register({ handleClose }) {
             />
             <br />
           </label>
-          <h3>{regErrMsg}</h3>
-          <input id="registersubmitbtn" type="submit" value="Submit" />
+
+          <input type="submit" value="Submit" className="registersubmitbtn" />
         </form>
       </motion.div>
     </Backdrop>

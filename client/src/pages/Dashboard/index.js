@@ -85,11 +85,15 @@ export default function Dashboard() {
 
     return (
         <Zoom><div id='dashboardContainer' className='loginContainer nes-container is-centered'>
-            <button onClick={handleLogout}>Logout</button>
+            <button id='dashlougoutbtn' onClick={handleLogout}>Logout</button>
             <div id='dash1cont' style={{float:"left"}}>
+                <div id='dashpart1'>
                 <h1 id='h1dashboard'>Player Icon</h1>
                 <h1>Username</h1>
+                </div>
+                <div id='dashpart2'>
                 <h2>Stats</h2>
+                </div>
             </div>
             <div id='dash2cont' style={{float:"right"}}>
             <form onSubmit={handleJoinRoom}>
