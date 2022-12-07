@@ -15,7 +15,6 @@ import jsonMap from './assets/level/level_map.json'
 
 import fire from './assets/characters/fire1.png'
 import ninja from './assets/characters/ninja.png'
-
 export const propListSmall =[175, 176, 149, 132, 215, 202, 199]
 export const propListLarge =[0, 1, 5, 6, 48, 49, 50]
 // export const propListSmall =[176, 149, 132, 215, 202, 199
@@ -46,7 +45,6 @@ class GameScene extends Phaser.Scene {
         this.load.spritesheet('natureSheet', TilesetNature, { frameWidth: 16, frameHeight: 16 });
         this.load.spritesheet('natureSheetLarge', TilesetNature, { frameWidth: 32, frameHeight: 32 });
         // this.load.spritesheet('characters', TilesetNature, { frameWidth: 32, frameHeight: 32 } )
-
 
         //************background layer*********** //
         this.load.image('background', TilesetFloor)
@@ -87,7 +85,6 @@ class GameScene extends Phaser.Scene {
 
     create() {
         this.createMap();
-        
         // Initialsed Controls
         this.cursors = this.input.keyboard.createCursorKeys();
         
@@ -189,8 +186,8 @@ class GameScene extends Phaser.Scene {
             const listOfAlive = Object.values(this.players).filter(p => p.character !== "seeker")
             let playersHiding = listOfAlive.length
             let playersDead = 0
-            console.log("listOFAlive", listOfAlive)
-            console.log("playersHiding", playersHiding)
+            // console.log("listOFAlive", listOfAlive)
+            // console.log("playersHiding", playersHiding)
             if (this.players[id].isAlive === false){
                 playersDead += 1
                 console.log("playersDied", playersDead)

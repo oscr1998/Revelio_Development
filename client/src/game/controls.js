@@ -46,29 +46,20 @@ export default function controls(cursors, player, velocity, character, isAlive){
         player.sprite.setVelocity(0, 0);
         player.moved = false;
     }
-    if ((cursors.space.isDown) && character === "hider" && isAlive === true ) {
-        let fired = 0;
-        fired += 1
+    if ((cursors.space.JustDown === true) && character === "hider" && isAlive === true ) {
         console.log("space pressed")
         const randomSize = Math.floor(Math.random()*2)
         let randomId;
 
-        function selectProp(){
         if(randomSize === 1){
-            randomId = Math.ceil(Math.random()*propListSmall.length) 
+                randomId = Math.ceil(Math.random()*propListSmall.length) 
         }else{
             randomId = Math.floor(Math.random()*propListLarge.length)}
-        
-        console.log("RANDOM size", randomSize, "RANDOM id",randomId)
-        socket.emit('changedProp', room, randomSize, randomId)
+            
+            console.log("RANDOM size", randomSize, "RANDOM id",randomId)
+            socket.emit('changedProp', room, randomSize, randomId)
 
-        console.log("sprite:", player.sprite)
-        fired = 0
-        }
-
-        if(fired === 1){
-            selectProp()
-        }
+            console.log("sprite:", player.sprite)
     }
 }
 
