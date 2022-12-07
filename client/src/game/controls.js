@@ -1,7 +1,9 @@
-import {props, propListLarge, propListSmall} from './index'
+import { props, propListLarge, propListSmall } from './index'
 import { socket, room } from '../pages/Dashboard/index'
 
-export default function controls(cursors, player, velocity, character, isAlive){
+let lastFired = 0
+
+export default function controls(cursors, player, velocity, character, isAlive, runTime){
     const angledVelocity = Math.sqrt((velocity**2)/2)
     if (cursors.right.isDown) {
         player.sprite.setVelocity(velocity, 0);
@@ -46,20 +48,24 @@ export default function controls(cursors, player, velocity, character, isAlive){
         player.sprite.setVelocity(0, 0);
         player.moved = false;
     }
-    if (cursors.space.isDown && character === "hider" && isAlive === true ) {
-        console.log("space pressed")
-        const randomSize = Math.floor(Math.random()*2)
-        let randomId;
+    if ((cursors.space.isDown) && character === "hider" && isAlive === true ) {
 
-        if(randomSize === 1){
+        if(lastFired < runTime - 1000){
+            lastFired = runTime
+            console.log("space pressed")
+            const randomSize = Math.floor(Math.random()*2)
+            let randomId;
+    
+            if(randomSize === 1){
                 randomId = Math.ceil(Math.random()*propListSmall.length) 
-        }else{
-            randomId = Math.floor(Math.random()*propListLarge.length)}
+            }else{
+                randomId = Math.floor(Math.random()*propListLarge.length)}
             
             console.log("RANDOM size", randomSize, "RANDOM id",randomId)
             socket.emit('changedProp', room, randomSize, randomId)
-
+    
             console.log("sprite:", player.sprite)
+        }
     }
 }
 

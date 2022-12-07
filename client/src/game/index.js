@@ -160,7 +160,7 @@ class GameScene extends Phaser.Scene {
 
     update(time, delta) {
         // Controls
-        controls(this.cursors, this.players[socket.id], this.velocity, this.players[socket.id].character, this.players[socket.id].isAlive)
+        controls(this.cursors, this.players[socket.id], this.velocity, this.players[socket.id].character, this.players[socket.id].isAlive, time)
 
         // update movement if Moved
         if (this.players[socket.id].moved) {
