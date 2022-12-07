@@ -2,7 +2,7 @@ from game import db
 from game import create_app
 from game.models.user import User
 from werkzeug.security import generate_password_hash
-from tool import get_random_string
+from tool import get_random_string, get_random_avatar
 
 users = [
     { 
@@ -36,5 +36,6 @@ with app.app_context():
             wins = 0,
             wins_as_hunter = 0,
             games_played = 0,
+            avatar_url = get_random_avatar(),
         ))
     db.session.commit()

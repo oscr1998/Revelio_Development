@@ -12,4 +12,5 @@ class User(db.Model, UserMixin):
     wins = sa.Column(sa.Integer)
     wins_as_hunter = sa.Column(sa.Integer)
     games_played = sa.Column(sa.Integer)
+    avatar_url = sa.Column(sa.String)
 
