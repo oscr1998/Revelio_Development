@@ -24,10 +24,11 @@ class GameScene extends Phaser.Scene {
             // id2: { id: "", username: "", character: "", sprite: "", moved: false },
         }
         this.listOfPlayers = null
+        this.listOfHiders = null
+        this.listOfSeekers = null
         this.velocity = 350
         this.scaleSize = 2;
         this.Timer = 10;
-        this.hotfix_counter = 0
     }
 
     preload() {
@@ -60,20 +61,19 @@ class GameScene extends Phaser.Scene {
 
             Object.keys(players_server).forEach(id => {
 
-                // If sprite is not created locally
+                // Initialisation of the local players list
                 if (!this.players[id]) {
-                    // copy the list
                     this.players[id] = players_server[id]
-                } else if (id !== socket.id) {
-                    // update other players status
-                    this.players[id].sprite.x = players_server[id].x
-                    this.players[id].sprite.y = players_server[id].y
-                    this.players[id].isAlive = players_server[id].isAlive
-                    this.players[id].propIndices = players_server[id].propIndices
-                    // also the player self
-                    this.players[socket.id].propIndices = players_server[socket.id].propIndices
-                    this.players[socket.id].isAlive = players_server[socket.id].isAlive
+                } else {
+                    // If the list already exists locally, update players list, expect the sprite
+                    this.players[id] = { ...players_server[id], sprite: this.players[id].sprite }
+                    if(id !== socket.id) {
+                        // Update others player's live coords
+                        this.players[id].sprite.x = players_server[id].x
+                        this.players[id].sprite.y = players_server[id].y
+                    }
                 }
+
             })
         })
         socket.emit("in-game", room)
@@ -97,6 +97,7 @@ class GameScene extends Phaser.Scene {
             repeat: -1,
         });
 
+        // Add sprites for every player depends on their character type
         this.listOfPlayers.forEach(id => {
             if (this.players[id].character === "seeker") {
                 this.players[id] = { ...this.players[id], sprite: this.physics.add.sprite(this.players[id].x, this.players[id].y, 'bug') }
@@ -109,22 +110,21 @@ class GameScene extends Phaser.Scene {
             this.physics.add.collider(this.blockedLayer, this.players[id].sprite)
         })
 
+        this.cameras.main.startFollow(this.players[socket.id].sprite);        
 
-        // this.listOfPlayers.forEach(id => {
-        //     if (!players[id].character === "seeker") {
-        //         players[id] = { ...players[id], isAlive: true }
-        //     }
-        // })
-
-        this.cameras.main.startFollow(this.players[socket.id].sprite);
-
-        const listOfHiders = Object.values(this.players).filter(p => p.character !== "seeker")
-        const listOfSeekers = Object.values(this.players).filter(p => p.character !== "hider")
-        listOfHiders.forEach(id => {
-            this.physics.add.collider(listOfSeekers[0].sprite, id.sprite, function () {
-                id.isAlive = false
+        // Set collision for every player
+        this.listOfHiders = Object.values(this.players).filter(p => p.character === "hider")
+        this.listOfSeekers = Object.values(this.players).filter(p => p.character === "seeker")
+        this.listOfSeekers.forEach(S => {
+            this.listOfHiders.forEach(H => {
+                this.physics.add.collider(S.sprite, H.sprite, () => {
+                    if( H.isAlive === true){
+                        socket.emit('killed', room, H.id )
+                    }
+                })
             })
         })
+
 
         // Debugging
         this.debug("create")
@@ -145,7 +145,7 @@ class GameScene extends Phaser.Scene {
         // Controls
         controls(this.cursors, this.players[socket.id], this.velocity, this.players[socket.id].character, this.players[socket.id].isAlive)
 
-
+        // update movement if Moved
         if (this.players[socket.id].moved) {
             socket.emit('moved', {
                 x: this.players[socket.id].sprite.x,
@@ -153,16 +153,7 @@ class GameScene extends Phaser.Scene {
             }, room)
         }
 
-        //! you just want to die once...
-        if (this.players[socket.id].isAlive === false) {
-            this.hotfix_counter++
-            if(this.hotfix_counter === 1){
-                socket.emit('killed', room)
-                this.hotfix_counter++
-            }
-            this.hotfix_counter --
-        }
-
+        // update Texture if Dead or Space pressed
         this.listOfPlayers.forEach(id => {
             if (this.players[id].isAlive === false) {
                 this.players[id].sprite.setTexture('ghost').setScale(0.1).setOrigin(0.5)
@@ -170,13 +161,11 @@ class GameScene extends Phaser.Scene {
             if(this.players[id].propIndices !== null){
                 if(this.players[id].propIndices[0] === 1){
                     this.players[id].sprite.setTexture("natureSheetLarge", propListLarge[this.players[id].propIndices[1]]).setScale(2).setSize(32, 32)
-                }else{
+                } else {
                     this.players[id].sprite.setTexture("natureSheet", propListSmall[this.players[id].propIndices[1]]).setScale(2).setSize(16, 16)
                 }
             }
-            
         })
-
 
         this.debug("update", delta, this.players[socket.id].sprite.body.speed)
     }

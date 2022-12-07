@@ -52,6 +52,7 @@ io.on('connection', (socket) => {
             {x: 400, y:400 },
             {x: 500, y:500 },
         ]
+        
         listOfPlayers.forEach((id, idx) => {
             if (id === seekerID){
                 players[room][id] = { 
@@ -72,7 +73,9 @@ io.on('connection', (socket) => {
                     propIndices: null }
             }
         })
+        //Ignore
         io.to(room).emit('update-room', players[room])
+        //Ignore
 
         io.to(room).emit('teleport-players')
 
@@ -82,55 +85,22 @@ io.on('connection', (socket) => {
         io.to(room).emit('update-client', players[room])
     })
 
-    // socket.on("update-server", players_Client => {
-    //     Object.keys(players_Client).forEach(id => {
-    //         players["123"][id] = players_Client[id]
-    //     })
-    //     socket.emit('update-client', players["123"])
-    // })
-
     socket.on("moved", (coords, room) => {
         players[room][socket.id].x = coords.x
         players[room][socket.id].y = coords.y
         io.to(room).emit('update-client', players[room])
     })
 
-    //todo 
-    socket.on("killed", (room) => {
-        players[room][socket.id].isAlive = false
-        players[room][socket.id].propIndices = null
+    socket.on("killed", (room, H_id) => {
+        players[room][H_id].isAlive = false
+        players[room][H_id].propIndices = null
         io.to(room).emit('update-client', players[room])
     })
 
-    socket.on("changedProp", (room, randomId, randomSize) => {
+    socket.on("changedProp", (room, randomSize, randomId ) => {
         players[room][socket.id].propIndices = [randomSize, randomId]
         io.to(room).emit('update-client', players[room])
     })
-
-    // socket.on('join-room', (room, coords, cb) => {
-    //     socket.join(room)
-
-    //     const playersID = Array.from(io.of("/").adapter.rooms.get(room));
-
-    //     cb({ id: socket.id, room: room })
-
-    //     io.to(room).emit('update-room', playersID, socket.id, coords)
-    // })
-
-    // socket.on('moving', (room, coords) => {
-    //     const playersID = Array.from(io.of("/").adapter.rooms.get(room));
-    //     io.to(room).emit('update-room', playersID, socket.id, coords)
-    // })
-
-    // socket.on('disconnecting', () => {
-    //     Array.from(socket.rooms).forEach(
-    //         room => {
-    //             let playersID = Array.from(io.of("/").adapter.rooms.get(room)).filter(p => p !== socket.id)
-    //             io.to(room).emit('update-room', playersID, socket.id, null)
-    //         }
-    //     )
-    // })
-
 
     socket.on('disconnecting', () => {
         Array.from(socket.rooms).forEach(
