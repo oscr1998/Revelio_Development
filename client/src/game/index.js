@@ -37,7 +37,6 @@ class GameScene extends Phaser.Scene {
         this.load.image('bug', 'https://content.codecademy.com/courses/learn-phaser/physics/bug_1.png');
         this.load.image('ghost', ghost)
 
-
         this.load.spritesheet('natureSheet', TilesetNature, { frameWidth: 16, frameHeight: 16 });
         this.load.spritesheet('natureSheetLarge', TilesetNature, { frameWidth: 32, frameHeight: 32 });
         // this.load.spritesheet('characters', TilesetNature, { frameWidth: 32, frameHeight: 32 } )
@@ -81,7 +80,6 @@ class GameScene extends Phaser.Scene {
     }
 
     create() {
-            
         this.createMap();
         
         // Initialsed Controls
