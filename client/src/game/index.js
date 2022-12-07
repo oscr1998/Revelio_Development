@@ -12,9 +12,10 @@ import TilesetHouse from './assets/level/TilesetHouse.png'
 // import TilesetReliefDetail from './assets/level/TilesetReliefDetail.png'
 import jsonMap from './assets/level/level_map.json'
 
-export const propListSmall =[176, 149, 132]
-export const propListLarge =[0, 1, 33, 50]
-
+export const propListSmall =[175, 176, 149, 132, 215, 202, 199]
+export const propListLarge =[0, 1, 5, 6, 48, 49, 50]
+// export const propListSmall =[176, 149, 132, 215, 202, 199
+// export const propListLarge =[0, 1, 5, 6, 48, 49, 50]
 class GameScene extends Phaser.Scene {
     constructor() {
         super('GameScene')

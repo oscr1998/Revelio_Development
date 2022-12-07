@@ -46,14 +46,33 @@ export default function controls(cursors, player, velocity, character, isAlive){
         player.sprite.setVelocity(0, 0);
         player.moved = false;
     }
-    if (cursors.space.isDown && character === "hider" && isAlive === true ) {
+    if ((cursors.space.isDown) && character === "hider" && isAlive === true ) {
+        let fired = 0;
+        fired += 1
         console.log("space pressed")
         const randomSize = Math.floor(Math.random()*2)
-        const randomId = randomSize ? Math.floor(Math.random()*propListSmall.length) : Math.floor(Math.random()*propListLarge.length)
-        console.log("RANDOM ID", randomId)
-        socket.emit('changedProp', room, randomSize, randomId)
+        let randomId;
+
+        function selectProp(){
+        if(randomSize === 1){
+            randomId = Math.ceil(Math.random()*propListSmall.length) 
+        }else{
+            randomId = Math.floor(Math.random()*propListLarge.length)}
         
-        // if(randomSize === 1){
+        console.log("RANDOM size", randomSize, "RANDOM id",randomId)
+        socket.emit('changedProp', room, randomSize, randomId)
+
+        console.log("sprite:", player.sprite)
+        fired = 0
+        }
+
+        if(fired === 1){
+            selectProp()
+        }
+    }
+}
+
+ // if(randomSize === 1){
         //     let randomId = Math.floor(Math.random()*propListLarge.length)
 
         //     player.sprite.setTexture("natureSheetLarge", propListLarge[randomId]).setScale(2).setSize(32, 32)
@@ -68,7 +87,3 @@ export default function controls(cursors, player, velocity, character, isAlive){
         //     console.log("small", randomId)
         //     socket.emit('changedProp',room)
         // }
-        
-        console.log("sprite:", player.sprite)
-    }
-}
