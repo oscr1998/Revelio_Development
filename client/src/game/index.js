@@ -15,8 +15,10 @@ import jsonMap from './assets/level/level_map.json'
 
 import fire from './assets/characters/fire1.png'
 import ninja from './assets/characters/ninja.png'
-export const propListSmall =[175, 176, 149, 132, 215, 202, 199]
-export const propListLarge =[0, 1, 5, 6, 48, 49, 50]
+import jsonMap2 from './assets/level2/level_map.json'
+
+export const propListSmall = [175, 176, 149, 132, 215, 202, 199]
+export const propListLarge = [0, 1, 5, 6, 48, 49, 50]
 // export const propListSmall =[176, 149, 132, 215, 202, 199
 // export const propListLarge =[0, 1, 5, 6, 48, 49, 50]
 class GameScene extends Phaser.Scene {
@@ -28,10 +30,11 @@ class GameScene extends Phaser.Scene {
             // id2: { id: "", username: "", character: "", sprite: "", moved: false },
         }
         this.listOfPlayers = null
+        this.listOfHiders = null
+        this.listOfSeekers = null
         this.velocity = 350
         this.scaleSize = 2;
-        this.Timer = 10;
-        this.hotfix_counter = 0
+        this.Timer = 60;
     }
 
     preload() {
@@ -59,25 +62,25 @@ class GameScene extends Phaser.Scene {
         this.load.image('house', TilesetHouse)
         // this.load.image('mine', TilesetReliefDetail)
         this.load.tilemapTiledJSON('map', jsonMap);
+        this.load.tilemapTiledJSON('map2', jsonMap2)
 
         socket.on('update-client', players_server => {
 
             Object.keys(players_server).forEach(id => {
 
-                // If sprite is not created locally
+                // Initialisation of the local players list
                 if (!this.players[id]) {
-                    // copy the list
                     this.players[id] = players_server[id]
-                } else if (id !== socket.id) {
-                    // update other players status
-                    this.players[id].sprite.x = players_server[id].x
-                    this.players[id].sprite.y = players_server[id].y
-                    this.players[id].isAlive = players_server[id].isAlive
-                    this.players[id].propIndices = players_server[id].propIndices
-                    // also the player self
-                    this.players[socket.id].propIndices = players_server[socket.id].propIndices
-                    this.players[socket.id].isAlive = players_server[socket.id].isAlive
+                } else {
+                    // If the list already exists locally, update players list, expect the sprite
+                    this.players[id] = { ...players_server[id], sprite: this.players[id].sprite }
+                    if(id !== socket.id) {
+                        // Update others player's live coords
+                        this.players[id].sprite.x = players_server[id].x
+                        this.players[id].sprite.y = players_server[id].y
+                    }
                 }
+
             })
         })
         socket.emit("in-game", room)
@@ -85,11 +88,12 @@ class GameScene extends Phaser.Scene {
 
     create() {
         this.createMap();
+        
         // Initialsed Controls
         this.cursors = this.input.keyboard.createCursorKeys();
-        
+
         // Grab all players ID in an arrary -> ["id1", "id2"]
-        this.listOfPlayers = Object.keys(this.players) 
+        this.listOfPlayers = Object.keys(this.players)
 
         this.timeMessage = this.add.text(this.cameras.main.height, 0, "Timer: " + this.Timer, { fontSize: "32px", align: 'right' }).setScrollFactor(0);
         this.countdown = this.time.addEvent({
@@ -99,17 +103,20 @@ class GameScene extends Phaser.Scene {
             repeat: -1,
         });
 
+        // Add sprites for every player depends on their character type
         this.listOfPlayers.forEach(id => {
             if (this.players[id].character === "seeker") {
-                this.players[id] = { ...this.players[id], sprite: this.physics.add.sprite(this.players[id].x, this.players[id].y, 'fire')}
+                this.players[id] = { ...this.players[id], sprite: this.physics.add.sprite(this.players[id].x, this.players[id].y, 'fire').setSize(16,24)}
                 // players[id].sprite.setScale(this.scaleSize)
             } else {
                 this.players[id] = { ...this.players[id], sprite: this.physics.add.sprite(this.players[id].x, this.players[id].y, 'ninja').setScale(1.5)}
             }
             this.players[id].sprite.setCollideWorldBounds(true);
             this.players[id].sprite.body.immovable = true
-            this.physics.add.collider(this.blockedLayer, this.players[id].sprite)
+            //this.physics.add.collider(this.blockedLayer, this.players[id].sprite)
+            this.physics.add.collider(this.blockedLayer2, this.players[id].sprite)
         })
+
 
         // this.listOfPlayers.forEach(id => {
         //     if (!players[id].character === "seeker") {
@@ -119,13 +126,19 @@ class GameScene extends Phaser.Scene {
 
         this.cameras.main.startFollow(this.players[socket.id].sprite);
 
-        const listOfHiders = Object.values(this.players).filter(p => p.character !== "seeker")
-        const listOfSeekers = Object.values(this.players).filter(p => p.character !== "hider")
-        listOfHiders.forEach(id => {
-            this.physics.add.collider(listOfSeekers[0].sprite, id.sprite, function () {
-                id.isAlive = false
+        // Set collision for every player
+        this.listOfHiders = Object.values(this.players).filter(p => p.character === "hider")
+        this.listOfSeekers = Object.values(this.players).filter(p => p.character === "seeker")
+        this.listOfSeekers.forEach(S => {
+            this.listOfHiders.forEach(H => {
+                this.physics.add.collider(S.sprite, H.sprite, () => {
+                    if( H.isAlive === true){
+                        socket.emit('killed', room, H.id )
+                    }
+                })
             })
         })
+
 
         // Debugging
         this.debug("create")
@@ -137,7 +150,7 @@ class GameScene extends Phaser.Scene {
         console.log(this.Timer)
         if (this.Timer <= 0) {
             //stop game and move to next scene
-        
+
             this.countdown.destroy();
             console.log("***********")
             socket.emit("redirectLobby", room)
@@ -149,7 +162,7 @@ class GameScene extends Phaser.Scene {
         // Controls
         controls(this.cursors, this.players[socket.id], this.velocity, this.players[socket.id].character, this.players[socket.id].isAlive)
 
-
+        // update movement if Moved
         if (this.players[socket.id].moved) {
             socket.emit('moved', {
                 x: this.players[socket.id].sprite.x,
@@ -157,45 +170,22 @@ class GameScene extends Phaser.Scene {
             }, room)
         }
 
-        //! you just want to die once...
-        if (this.players[socket.id].isAlive === false) {
-            this.hotfix_counter++
-            if(this.hotfix_counter === 1){
-                socket.emit('killed', room)
-                this.hotfix_counter++
-            }
-            this.hotfix_counter --
-        }
-
+        // update Texture if Dead or Space pressed
         this.listOfPlayers.forEach(id => {
             if (this.players[id].isAlive === false) {
                 this.players[id].sprite.setTexture('ghost').setScale(0.08).setOrigin(0.5).setAlpha(0.5).setSize(16, 16)
             }
-            if(this.players[id].propIndices !== null){
-                if(this.players[id].propIndices[0] === 1){
+            if (this.players[id].propIndices !== null) {
+                if (this.players[id].propIndices[0] === 1) {
                     this.players[id].sprite.setTexture("natureSheetLarge", propListLarge[this.players[id].propIndices[1]]).setScale(2).setSize(32, 32)
-                }else{
+                } else {
                     this.players[id].sprite.setTexture("natureSheet", propListSmall[this.players[id].propIndices[1]]).setScale(2).setSize(16, 16)
                 }
             }
             
-            
         })
 
-        this.listOfPlayers.forEach(id => {
-            const listOfAlive = Object.values(this.players).filter(p => p.character !== "seeker")
-            let playersHiding = listOfAlive.length
-            let playersDead = 0
-            // console.log("listOFAlive", listOfAlive)
-            // console.log("playersHiding", playersHiding)
-            if (this.players[id].isAlive === false){
-                playersDead += 1
-                console.log("playersDied", playersDead)
-            }
-            if(playersDead === playersHiding){
-                socket.emit("redirectLobby", room)
-            }
-        })
+
         this.debug("update", delta, this.players[socket.id].sprite.body.speed)
     }
 
@@ -213,53 +203,84 @@ class GameScene extends Phaser.Scene {
         }
     }
 
+    // createMap() {
+
+    //     //create tile map 
+    //     // this.add.image(0, 0, "background")
+    //     this.levelMap = this.make.tilemap({ key: 'map' });
+
+    //     /**
+    //      * add tileset image to map 
+    //      * first arg name in json. 2nd arg name in this.load.image
+    //     **/
+
+    //     //adding tileset for background layer
+    //     this.tiles = this.levelMap.addTilesetImage('TilesetFloor', 'background')
+    //     this.waterTiles = this.levelMap.addTilesetImage('TilesetWater', 'water')
+
+    //     //adding tileset for blocked layer
+    //     // this.blockedTiles = this.map.addTilesetImage('TilesetFloor', 'borders')
+    //     this.nature = this.levelMap.addTilesetImage('TilesetNature', 'nature')
+    //     this.house = this.levelMap.addTilesetImage('TilesetHouse', 'house')
+    //     this.mine = this.levelMap.addTilesetImage('TilesetReliefDetail', 'mine')
+
+    //     //adding tileset for decoration layer
+    //     this.floorDetailTiles = this.levelMap.addTilesetImage('TilesetFloorDetail', 'floor')
+    //     //this.seaTiles = this.map.addTilesetImage('TilesetWater', 'water')
+
+
+    //     //first arg = layer name on tiled 
+    //     this.backgroundLayer = this.levelMap.createLayer('background', [this.waterTiles, this.tiles])
+    //     this.blockedLayer = this.levelMap.createLayer('blocked', [this.nature, this.house, this.mine, this.waterTiles])
+    //     this.decorationLayer = this.levelMap.createLayer('background_decorations', [this.floorDetailTiles, this.seaTiles, this.house, this.waterTiles, this.nature])
+
+    //     //add collisions for blocked layer
+    //     this.blockedLayer.setCollisionByExclusion([-1]);
+
+    //     //scaling map 
+    //     this.backgroundLayer.setScale(this.scaleSize)
+    //     this.decorationLayer.setScale(this.scaleSize)
+    //     this.blockedLayer.setScale(this.scaleSize)
+
+    //     //update world bounds
+    //     this.physics.world.bounds.width = this.levelMap.widthInPixels * this.scaleSize;
+    //     this.physics.world.bounds.height = this.levelMap.heightInPixels * this.scaleSize;
+
+    //     // limit the camera to the size of our map
+    //     this.cameras.main.setBounds(0, 0,
+    //         this.levelMap.widthInPixels * this.scaleSize,
+    //         this.levelMap.heightInPixels * this.scaleSize
+    //     );
+    // }
+
     createMap() {
+        this.levelMap2 = this.make.tilemap({ key: 'map2' });
 
-        //create tile map 
-        // this.add.image(0, 0, "background")
-        this.levelMap = this.make.tilemap({ key: 'map' });
-
-        /**
-         * add tileset image to map 
-         * first arg name in json. 2nd arg name in this.load.image
-        **/
-
-        //adding tileset for background layer
-        this.tiles = this.levelMap.addTilesetImage('TilesetFloor', 'background')
-        this.waterTiles = this.levelMap.addTilesetImage('TilesetWater', 'water')
-
-        //adding tileset for blocked layer
-        // this.blockedTiles = this.map.addTilesetImage('TilesetFloor', 'borders')
-        this.nature = this.levelMap.addTilesetImage('TilesetNature', 'nature')
-        this.house = this.levelMap.addTilesetImage('TilesetHouse', 'house')
-        this.mine = this.levelMap.addTilesetImage('TilesetReliefDetail', 'mine')
-
-        //adding tileset for decoration layer
-        this.floorDetailTiles = this.levelMap.addTilesetImage('TilesetFloorDetail', 'floor')
-        //this.seaTiles = this.map.addTilesetImage('TilesetWater', 'water')
-
+        this.tiles2 = this.levelMap2.addTilesetImage('TilesetFloor', 'background')
+        this.waterTiles2 = this.levelMap2.addTilesetImage('TilesetWater', 'water')
+        this.nature2 = this.levelMap2.addTilesetImage('TilesetNature', 'nature')
+        this.house2 = this.levelMap2.addTilesetImage('TilesetHouse', 'house')
 
         //first arg = layer name on tiled 
-        this.backgroundLayer = this.levelMap.createLayer('background', [this.waterTiles, this.tiles])
-        this.blockedLayer = this.levelMap.createLayer('blocked', [this.nature, this.house, this.mine, this.waterTiles])
-        this.decorationLayer = this.levelMap.createLayer('background_decorations', [this.floorDetailTiles, this.seaTiles, this.house, this.waterTiles, this.nature])
+        this.backgroundLayer2 = this.levelMap2.createLayer('background', [this.tiles2, this.waterTiles2, this.nature2, this.house2])
+        this.blockedLayer2 = this.levelMap2.createLayer('blocked', [this.tiles2, this.waterTiles2, this.nature2, this.house2])
+        this.decorationLayer2 = this.levelMap2.createLayer('background_decorations', [this.tiles2, this.waterTiles2, this.nature2, this.house2])
 
-        //add collisions for blocked layer
-        this.blockedLayer.setCollisionByExclusion([-1]);
+        this.blockedLayer2.setCollisionByExclusion([-1]);
 
-        //scaling map 
-        this.backgroundLayer.setScale(this.scaleSize)
-        this.decorationLayer.setScale(this.scaleSize)
-        this.blockedLayer.setScale(this.scaleSize)
+
+         //scaling map 
+        this.backgroundLayer2.setScale(this.scaleSize)
+        this.decorationLayer2.setScale(this.scaleSize)
+        this.blockedLayer2.setScale(this.scaleSize)
 
         //update world bounds
-        this.physics.world.bounds.width = this.levelMap.widthInPixels * this.scaleSize;
-        this.physics.world.bounds.height = this.levelMap.heightInPixels * this.scaleSize;
+        this.physics.world.bounds.width = this.levelMap2.widthInPixels * this.scaleSize;
+        this.physics.world.bounds.height = this.levelMap2.heightInPixels * this.scaleSize;
 
-        // limit the camera to the size of our map
         this.cameras.main.setBounds(0, 0,
-            this.levelMap.widthInPixels * this.scaleSize,
-            this.levelMap.heightInPixels * this.scaleSize
+            this.levelMap2.widthInPixels * this.scaleSize,
+            this.levelMap2.heightInPixels * this.scaleSize
         );
     }
 

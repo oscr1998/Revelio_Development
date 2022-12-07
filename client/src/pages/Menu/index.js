@@ -1,6 +1,6 @@
-import { React, useState } from "react";
+import { React, useState, useEffect } from "react";
 import { Login, Register, ForgotPwd, ResetPwd } from "../../components";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import "./style.css";
 import { Zoom, Flip } from "react-reveal";
 // import Modal from '../../components/Modal';
@@ -17,6 +17,15 @@ export default function Menu() {
   const closerpwd = () => setrPwdOpen(false);
   const openrpwd = () => setrPwdOpen(true);
 
+  const navigate = useNavigate();
+  const isLogin = localStorage.getItem("isLogin")
+
+  useEffect(() => {
+    if(isLogin){
+      navigate('/dashboard')
+    }
+  },[isLogin])
+
   return (
     <div id="menuContainer">
       <h1 id="h1menu">Logo</h1>
@@ -28,7 +37,7 @@ export default function Menu() {
             <button
               id="registerbtn"
               onClick={() => (regOpen ? closereg() : openreg())}
-              className="nes-btn is-primary"
+              className="regbtn nes-btn is-primary"
             >
               Register
             </button>
@@ -43,11 +52,9 @@ export default function Menu() {
           </AnimatePresence>
 
           <Flip>
-            <button className="leaderboardbtn nes-btn">
-              <Link id="leaderboardlink" to="/leaderboard">
-                Leaderboard
-              </Link>
-            </button>
+            <Link id="leaderboardlink" to="/leaderboard">
+              <button className="leaderboardbtn nes-btn">Leaderboard</button>
+            </Link>
           </Flip>
 
           <div className="pwdcontainer">
@@ -64,7 +71,7 @@ export default function Menu() {
               onExitComplete={() => null}
             >
               {fpwdOpen && (
-                <ForgotPwd fpwdOpen={fpwdOpen} handleClose={closefpwd} />
+                <ForgotPwd fpwdOpen={fpwdOpen} handleClose={closefpwd} redirect={openrpwd}/>
               )}
             </AnimatePresence>
 
@@ -81,7 +88,7 @@ export default function Menu() {
               onExitComplete={() => null}
             >
               {rpwdOpen && (
-                <ResetPwd rpwdOpen={rpwdOpen} handleClose={closerpwd} />
+                <ResetPwd rpwdOpen={rpwdOpen} handleClose={closerpwd}/>
               )}
             </AnimatePresence>
           </div>

@@ -15,17 +15,23 @@
 
 .leaderboardbtn {
     background-color: rgb(106,89,61);
-}
-
-#leaderboardlink {
     color: whitesmoke;
+    width: max-content;
 }
 
 .pwdcontainer {
-    font-size: 60%;
+    font-size: 70%;
     margin-top: 5%; 
 }
 
 .pwdlink {
     padding: 15px;
+}
+
+.regbtn {
+    width: 67%;
+}
+
+.nes-btn::after {
+    box-shadow: none;
 }

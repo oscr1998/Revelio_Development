@@ -2,6 +2,9 @@ import { React, useState } from "react";
 import { motion } from "framer-motion";
 import Backdrop from "../Backdrop";
 import './style.css'
+import { useSelector } from "react-redux";
+import axios from 'axios'
+
 
 const dropIn = {
   hidden: {
@@ -25,6 +28,10 @@ const dropIn = {
 };
 
 export default function ResetPwd({ handleClose }) {
+
+  const Flask_URI = useSelector(state => state.flask.URI)
+  const [errMsg, setErrMsg] = useState(null)
+
   const [pwdInfo, setPwdInfo] = useState({
     username: "",
     otp: "",
@@ -33,6 +40,30 @@ export default function ResetPwd({ handleClose }) {
 
   function handleResetPwd(e) {
     e.preventDefault();
+    axios.patch(`${Flask_URI}/reset_password`, {
+      username: pwdInfo.username,
+      OTP: pwdInfo.otp,
+      new_password: pwdInfo.newpwd,
+    })
+    .then((res)=> {
+        if(res.status === 200){
+          setErrMsg("Successful reset! \nRedirect to login in 3")
+          let counter = 3;
+          setInterval(()=>{
+            setErrMsg(`Successful reset! \nRedirect to login in ${counter}`)
+            counter --
+            if (counter === 0) {
+              handleClose(false)
+            }
+          },1000)
+        } else {
+          console.warn("Something wired at register");
+        }
+    })
+    .catch((err) => {
+      setErrMsg(err.response.data.message)
+    });
+
   }
 
   return (
@@ -47,10 +78,9 @@ export default function ResetPwd({ handleClose }) {
         <form id="resetpwdForm" onSubmit={handleResetPwd}>
           <h1 id="reseth1">Reset Password</h1>
 
-          <button onClick={handleClose}>x</button>
+          <button className='closebtn' onClick={handleClose}>x</button>
 
           <label>
-            Username:
             <input
               required
               type="text"
@@ -59,12 +89,12 @@ export default function ResetPwd({ handleClose }) {
               onChange={(e) => {
                 setPwdInfo({ ...pwdInfo, username: e.target.value });
               }}
+              className='rpwdinput'
             />
             <br />
           </label>
 
           <label>
-            OTP:
             <input
               required
               type="otp"
@@ -73,26 +103,27 @@ export default function ResetPwd({ handleClose }) {
               onChange={(e) => {
                 setPwdInfo({ ...pwdInfo, otp: e.target.value });
               }}
+              className='rpwdinput'
             />
             <br />
           </label>
 
           <label>
-            New Password:
             <input
               required
-              type="newpassword"
+              type="password"
               minLength="8"
-              placeholder="New Password"
+              placeholder="New Password (min 8 characters)"
               value={pwdInfo.newpwd}
               onChange={(e) => {
                 setPwdInfo({ ...pwdInfo, newpwd: e.target.value });
               }}
+              className='rpwdinput'
             />
             <br />
           </label>
-
-          <input type="submit" value="Submit" />
+          <h3>{errMsg}</h3>
+          <input type="submit" value="Submit" className='rpwdsubmit' />
         </form>
       </motion.div>
     </Backdrop>

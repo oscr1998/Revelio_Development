@@ -67,7 +67,7 @@ export default function CreateGame({
             <br />
 
             {/* gamemode, roomsize, submitBtn */}
-            <label id="formlabel1">
+            <label id="maplabel">
               <div class="nes-select is-dark">
                 <select
                   required
@@ -80,7 +80,38 @@ export default function CreateGame({
                     });
                   }}
                 >
-                  <option value="0">Game Mode 1</option>
+                  <option value="0">Select Map</option>
+                  <option value="1">Skidrow</option>
+                  <option value="2">Skull Island</option>
+                </select>
+
+                {/* <input
+                  value={createGameInfo.gameMode}
+                  onChange={(e) => {
+                    setCreateGameInfo({
+                      ...createGameInfo,
+                      gameMode: e.target.value,
+                    });
+                  }}
+                /> */}
+                <br />
+              </div>
+            </label>
+
+                <label id="gamemodelabel">
+            <div class="nes-select is-dark">
+                <select
+                  required
+                  id="dark_select"
+                  value={createGameInfo.gameMode}
+                  onChange={(e) => {
+                    setCreateGameInfo({
+                      ...createGameInfo,
+                      gameMode: e.target.value,
+                    });
+                  }}
+                >
+                  <option value="0">Select Game Mode</option>
                   <option value="1">Game Mode 2</option>
                   <option value="0">Game Mode 3</option>
                 </select>
@@ -101,6 +132,7 @@ export default function CreateGame({
             <label>
               Room Size:
               <input
+                className="createroomsize"
                 required
                 type="number"
                 min={2}

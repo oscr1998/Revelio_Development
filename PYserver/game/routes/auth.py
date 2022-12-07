@@ -1,4 +1,4 @@
-from flask import Blueprint, jsonify, request
+from flask import Blueprint, jsonify, request, redirect, url_for
 from werkzeug import exceptions
 
 #* Login
@@ -15,6 +15,13 @@ from ..database.db import db
 
 auth = Blueprint("auth", __name__)
 
+@auth.route("/home")
+def home():
+    if (current_user.is_authenticated):
+        return jsonify(current_user)
+    else :
+        return "redirect to login page"
+
 @auth.route("/login", methods=['POST'])
 def login():
     if(current_user.is_authenticated):
@@ -25,7 +32,7 @@ def login():
     if (foundUsername and check_password_hash(foundUsername.password, userData['password'])):
         login_user(foundUsername, remember=True)
         return "Logged in!", 200
-    raise exceptions.BadRequest(f"Failed login! Incorrect login details")
+    raise exceptions.BadRequest(f"Failed login! \nIncorrect login details")
 
 
 @auth.route("/register", methods=['POST'])
@@ -118,7 +125,7 @@ def resetPassword():
         foundUsername.OTP = get_random_string()
         db.session.commit()
         return "Reset Password Successful!", 200
-    raise exceptions.BadRequest(f"Failed to rest! Incorrect details")
+    raise exceptions.BadRequest(f"Failed to rest! \nIncorrect details")
 
 @auth.route("/logout")
 @login_required
@@ -166,4 +173,8 @@ def stats_update():
         "games_played": current_user.games_played,
     }
     return jsonify(stats)
+
+@auth.errorhandler(exceptions.Unauthorized)
+def handle_401(err):
+    return redirect(url_for('auth.home'))
 
