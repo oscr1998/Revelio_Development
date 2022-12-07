@@ -6,9 +6,19 @@ from tool import get_random_string
 
 users = [
     { 
-        'username': "admin", 
+        'username': "s", 
         'email': "s@s.com",
         'password': "s", 
+    },
+    { 
+        'username': "z", 
+        'email': "z@z.com",
+        'password': "z", 
+    },
+    { 
+        'username': "c", 
+        'email': "c@c.com",
+        'password': "c", 
     },
 ]
 
