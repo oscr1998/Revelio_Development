@@ -2,6 +2,8 @@ import { React, useState } from "react";
 import { motion } from "framer-motion";
 import Backdrop from "../Backdrop";
 import "./style.css";
+import axios from 'axios'
+import { useSelector } from "react-redux";
 
 const dropIn = {
   hidden: {
@@ -25,6 +27,9 @@ const dropIn = {
 };
 
 export default function Register({ handleClose }) {
+
+  const Flask_URI = useSelector(state => state.flask.URI)
+
   const [regInfo, setRegInfo] = useState({
     username: "",
     email: "",
@@ -33,20 +38,41 @@ export default function Register({ handleClose }) {
     confirmPassword: "",
   });
 
+  const [regErrMsg, setRegErrMsg] = useState(null)
+
   function handelRegister(e) {
     e.preventDefault();
-
     if (regInfo.email !== regInfo.confirmEmail) {
-      //todo render an error msg
+      setRegErrMsg("Email does not match")
     } else if (regInfo.password !== regInfo.confirmPassword) {
-      //todo render an error msg
+      setRegErrMsg("Password does not match")
     } else {
-      //todo Send register detail to backend
-      //todo upon successful post request:
-      //todo      - render a msg: Registered
-      //todo      - setRegOpen(false)
-      //todo if failed:
-      //todo      - render an error msg
+      // kyl1g16.ecs@gmail.com
+      setRegErrMsg("Processing with your data...")
+      axios.post(`${Flask_URI}/register`, {
+          username: regInfo.username,
+          password: regInfo.password,
+          email: regInfo.email,
+      })
+      .then((res)=> {
+          if(res.status === 201){
+            setRegErrMsg("Register successful! \nRedirect to login in 3")
+            let counter = 3;
+            setInterval(()=>{
+              setRegErrMsg(`Register successful! \nRedirecting to login in ${counter}`)
+              counter --
+              if (counter === 0) {
+                handleClose(false)
+              }
+            },1000)
+          } else {
+            console.warn("Something wired at register");
+          }
+      })
+      .catch((err) => {
+        setRegErrMsg(err.response.data.message)
+      });
+
     }
   }
 
@@ -64,7 +90,9 @@ export default function Register({ handleClose }) {
           <h1 id="registerh1">Register</h1>
 
           <button className="closebtn"
-            onClick={handleClose}
+            onClick={() => {
+              handleClose()
+            }}
           >
             x
           </button>
@@ -117,7 +145,7 @@ export default function Register({ handleClose }) {
               required
               type="password"
               minLength="8"
-              placeholder="Password"
+              placeholder="Password (min 8 characters)"
               value={regInfo.password}
               onChange={(e) => {
                 setRegInfo({ ...regInfo, password: e.target.value });
@@ -140,7 +168,7 @@ export default function Register({ handleClose }) {
             />
             <br />
           </label>
-
+          <h3>{regErrMsg}</h3>
           <input type="submit" value="Submit" />
         </form>
       </motion.div>

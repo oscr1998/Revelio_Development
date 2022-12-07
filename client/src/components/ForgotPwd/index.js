@@ -2,6 +2,8 @@ import { React, useState } from "react";
 import { motion } from "framer-motion";
 import Backdrop from "../Backdrop";
 import './style.css'
+import { useSelector } from "react-redux";
+import axios from 'axios'
 
 const dropIn = {
   hidden: {
@@ -24,7 +26,11 @@ const dropIn = {
   },
 };
 
-export default function ForgotPwd({ handleClose }) {
+export default function ForgotPwd({ handleClose, redirect }) {
+
+  const Flask_URI = useSelector(state => state.flask.URI)
+  const [errMsg, setErrMsg] = useState(null)
+
   const [pwdInfo, setPwdInfo] = useState({
     username: "",
     email: "",
@@ -32,6 +38,22 @@ export default function ForgotPwd({ handleClose }) {
 
   function handleForgotPwd(e) {
     e.preventDefault();
+    setErrMsg("Processing with your data...")
+    axios.post(`${Flask_URI}/forgot_password`, {
+        username: pwdInfo.username,
+        email: pwdInfo.email,
+    })
+    // You dont wait for responds this time or user can perform timing side channel attack
+    setErrMsg("Please check your Email inbox for an OTP \nRedirect to reset page in 3")
+    let counter = 3;
+    setInterval(()=>{
+      setErrMsg(`Please check your Email inbox for an OTP \nRedirect to reset page in ${counter}`)
+      counter --
+      if (counter === 0) {
+        handleClose(false)
+        redirect(true)
+      }
+    },1000)
   }
 
   return (
@@ -76,7 +98,7 @@ export default function ForgotPwd({ handleClose }) {
             />
             <br />
           </label>
-
+          <h3>{errMsg}</h3>
           <input className="fpwdsubmit" type="submit" value="Submit" />
         </form>
       </motion.div>

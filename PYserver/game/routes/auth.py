@@ -32,7 +32,7 @@ def login():
     if (foundUsername and check_password_hash(foundUsername.password, userData['password'])):
         login_user(foundUsername, remember=True)
         return "Logged in!", 200
-    raise exceptions.BadRequest(f"Failed login! Incorrect login details")
+    raise exceptions.BadRequest(f"Failed login! \nIncorrect login details")
 
 
 @auth.route("/register", methods=['POST'])
@@ -125,7 +125,7 @@ def resetPassword():
         foundUsername.OTP = get_random_string()
         db.session.commit()
         return "Reset Password Successful!", 200
-    raise exceptions.BadRequest(f"Failed to rest! Incorrect details")
+    raise exceptions.BadRequest(f"Failed to rest! \nIncorrect details")
 
 @auth.route("/logout")
 @login_required

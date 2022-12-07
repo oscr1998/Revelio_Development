@@ -11,6 +11,8 @@ import { CreateGame } from '../../components';
 import { useSelector, useDispatch } from "react-redux";
 import { store_roomID, store_socket, update_players } from '../../actions/socket/socketSlice'
 
+import axios from 'axios'
+
 //! DEVELOPMENT ONLY
 import io from 'socket.io-client';
 
@@ -23,7 +25,7 @@ export default function Dashboard() {
     const navigate = useNavigate()
     const dispatch = useDispatch();
 
-    // const socket = useSelector(state => state.socket.socket)
+    const Flask_URI = useSelector(state => state.flask.URI)
     const isLogin = localStorage.getItem('isLogin');
 
 
@@ -31,13 +33,18 @@ export default function Dashboard() {
     const [ roomID, setRoomID ] = useState("123")
 
     useEffect(() => {
-        console.log("ping!!");
-        if(isLogin == "false"){
+        console.log("ping!! do socket");
+        if(isLogin === "false" || isLogin === null){
             navigate('/')
         } else if (isLogin == "true"){
-
+            axios.get(`${Flask_URI}/profile`,{ withCredentials: true })
+            .then((res) => {
+                console.log(res);
+            }).catch((err) => {
+                console.warn(err);
+            })
         }
-    }, [isLogin])
+    })
 
     function handleJoinRoom(e){
         e.preventDefault();
@@ -50,6 +57,12 @@ export default function Dashboard() {
     }
 
     function handleLogout(){
+        axios.get(`${Flask_URI}/logout`,{ withCredentials: true })
+        .then((res) => {
+            console.log(res);
+        }).catch((err) => {
+            console.warn(err);
+        })
         localStorage.clear();
         navigate('/')
     }

@@ -59,7 +59,7 @@ def create_app():
     #* Error Handlers
     @app.errorhandler(exceptions.BadRequest)
     def handle_400(err):
-        return jsonify({"message": f"{err}"}), 400
+        return jsonify({"message": f"{err.description}"}), 400
     @app.errorhandler(exceptions.NotFound)
     def handle_404(err):
         return jsonify({"message": f"Fallout 4, I think you are lost."}), 404
@@ -71,6 +71,6 @@ def create_app():
         return jsonify({"message": f"Naughty method is not allowed"}), 405
     @app.errorhandler(exceptions.Conflict)
     def handle_409(err):
-        return jsonify({"message": f"{err}"}), 409
+        return jsonify({"message": f"{err.description}"}), 409
     
     return app

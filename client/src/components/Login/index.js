@@ -9,18 +9,16 @@ import io from 'socket.io-client';
 import axios from 'axios'
 
 import { useNavigate } from 'react-router-dom';
-const serverEP = "https://localhost:3030/";
-const Flask_URI = 'http://127.0.0.1:3030'
-
-
+import { useSelector } from 'react-redux';
 
 export default function Login() {
 
     const navigate = useNavigate();
+    const Flask_URI = useSelector(state => state.flask.URI)
     const isLogin = localStorage.getItem('isLogin');
 
     const [ loginErrMsg, setloginErrMsg ] = useState(null)
-    const [loginInfo, setLoginInfo] = useState({
+    const [ loginInfo, setLoginInfo ] = useState({
         username: "",
         password: "",
     })
@@ -41,6 +39,7 @@ export default function Login() {
             if(res.status === 200){
                 localStorage.setItem("isLogin", true)
                 setloginErrMsg("")
+                console.log(res);
             } else {
                 console.warn("Something wired at login");
             }
@@ -53,9 +52,6 @@ export default function Login() {
                 console.warn("Something wired at /login/catch");
             }
         });
-
-
-
     }
 
     return (
