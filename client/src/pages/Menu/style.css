@@ -12,3 +12,11 @@
     align-items: center;
     margin: auto;
 }
+
+.leaderboardbtn {
+    background-color: rgb(106,89,61);
+}
+
+#leaderboardlink {
+    color: whitesmoke;
+}

@@ -37,8 +37,8 @@ export default function Menu() {
           </AnimatePresence>
 
           <Flip>
-            <button className="nes-btn">
-              <Link to="/leaderboard">Leaderboard</Link>
+            <button className="leaderboardbtn nes-btn">
+              <Link id='leaderboardlink' to="/leaderboard">Leaderboard</Link>
             </button>
           </Flip>
         </div>
