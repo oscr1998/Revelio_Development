@@ -63,7 +63,7 @@ export default function Register({ handleClose }) {
         <form id="registerForm" onSubmit={handelRegister}>
           <h1 id="registerh1">Register</h1>
 
-          <button
+          <button className="closebtn"
             onClick={handleClose}
           >
             x

@@ -47,10 +47,9 @@ export default function ResetPwd({ handleClose }) {
         <form id="resetpwdForm" onSubmit={handleResetPwd}>
           <h1 id="reseth1">Reset Password</h1>
 
-          <button onClick={handleClose}>x</button>
+          <button className='closebtn' onClick={handleClose}>x</button>
 
           <label>
-            Username:
             <input
               required
               type="text"
@@ -59,12 +58,12 @@ export default function ResetPwd({ handleClose }) {
               onChange={(e) => {
                 setPwdInfo({ ...pwdInfo, username: e.target.value });
               }}
+              className='rpwdinput'
             />
             <br />
           </label>
 
           <label>
-            OTP:
             <input
               required
               type="otp"
@@ -73,12 +72,12 @@ export default function ResetPwd({ handleClose }) {
               onChange={(e) => {
                 setPwdInfo({ ...pwdInfo, otp: e.target.value });
               }}
+              className='rpwdinput'
             />
             <br />
           </label>
 
           <label>
-            New Password:
             <input
               required
               type="newpassword"
@@ -88,11 +87,12 @@ export default function ResetPwd({ handleClose }) {
               onChange={(e) => {
                 setPwdInfo({ ...pwdInfo, newpwd: e.target.value });
               }}
+              className='rpwdinput'
             />
             <br />
           </label>
 
-          <input type="submit" value="Submit" />
+          <input type="submit" value="Submit" className='rpwdsubmit' />
         </form>
       </motion.div>
     </Backdrop>

@@ -28,7 +28,7 @@ export default function Menu() {
             <button
               id="registerbtn"
               onClick={() => (regOpen ? closereg() : openreg())}
-              className="nes-btn is-primary"
+              className="regbtn nes-btn is-primary"
             >
               Register
             </button>
@@ -43,11 +43,9 @@ export default function Menu() {
           </AnimatePresence>
 
           <Flip>
-            <button className="leaderboardbtn nes-btn">
-              <Link id="leaderboardlink" to="/leaderboard">
-                Leaderboard
-              </Link>
-            </button>
+            <Link id="leaderboardlink" to="/leaderboard">
+              <button className="leaderboardbtn nes-btn">Leaderboard</button>
+            </Link>
           </Flip>
 
           <div className="pwdcontainer">

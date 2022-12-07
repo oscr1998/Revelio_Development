@@ -42,14 +42,14 @@ export default function ForgotPwd({ handleClose }) {
         initial="hidden"
         animate="visible"
         exit="exit"
+        className="forgotpwdcontainer"
       >
         <form id="forgotpwdForm" onSubmit={handleForgotPwd}>
           <h1 id="forgoth1">Forgot Password</h1>
 
-          <button onClick={handleClose}>x</button>
+          <button className="closebtn" onClick={handleClose}>x</button>
 
           <label>
-            Username:
             <input
               required
               type="text"
@@ -58,12 +58,12 @@ export default function ForgotPwd({ handleClose }) {
               onChange={(e) => {
                 setPwdInfo({ ...pwdInfo, username: e.target.value });
               }}
+              className='fpwdinput'
             />
             <br />
           </label>
 
           <label>
-            Email:
             <input
               required
               type="email"
@@ -72,11 +72,12 @@ export default function ForgotPwd({ handleClose }) {
               onChange={(e) => {
                 setPwdInfo({ ...pwdInfo, email: e.target.value });
               }}
+              className='fpwdinput'
             />
             <br />
           </label>
 
-          <input type="submit" value="Submit" />
+          <input className="fpwdsubmit" type="submit" value="Submit" />
         </form>
       </motion.div>
     </Backdrop>

@@ -9,7 +9,5 @@
     align-items: center;
     justify-content: center;
     z-index: 1;
-    padding: 50%;
-    display: flex;
-    justify-content: center;
+    /* padding: 50%; */
 }
