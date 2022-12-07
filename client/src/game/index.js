@@ -12,9 +12,10 @@ import TilesetHouse from './assets/level/TilesetHouse.png'
 // import TilesetReliefDetail from './assets/level/TilesetReliefDetail.png'
 import jsonMap from './assets/level/level_map.json'
 
-export const propListSmall =[176, 149, 132]
-export const propListLarge =[0, 1, 33, 50]
-
+export const propListSmall =[175, 176, 149, 132, 215, 202, 199]
+export const propListLarge =[0, 1, 5, 6, 48, 49, 50]
+// export const propListSmall =[176, 149, 132, 215, 202, 199
+// export const propListLarge =[0, 1, 5, 6, 48, 49, 50]
 class GameScene extends Phaser.Scene {
     constructor() {
         super('GameScene')
@@ -36,7 +37,6 @@ class GameScene extends Phaser.Scene {
         this.load.image('codey', 'https://content.codecademy.com/courses/learn-phaser/physics/codey.png');
         this.load.image('bug', 'https://content.codecademy.com/courses/learn-phaser/physics/bug_1.png');
         this.load.image('ghost', ghost)
-
 
         this.load.spritesheet('natureSheet', TilesetNature, { frameWidth: 16, frameHeight: 16 });
         this.load.spritesheet('natureSheetLarge', TilesetNature, { frameWidth: 32, frameHeight: 32 });
@@ -80,7 +80,6 @@ class GameScene extends Phaser.Scene {
     }
 
     create() {
-            
         this.createMap();
         
         // Initialsed Controls
@@ -133,13 +132,16 @@ class GameScene extends Phaser.Scene {
     reduceTime() {
         this.Timer -= 1;
         this.timeMessage.setText("Timer: " + this.Timer);
+        console.log(this.Timer)
         if (this.Timer <= 0) {
             //stop game and move to next scene
+        
             this.countdown.destroy();
-
+            console.log("***********")
+            socket.emit("redirectLobby", room)
+            console.log("END GAME REACHED ***********")
         }
     }
-
 
     update(time, delta) {
         // Controls

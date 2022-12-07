@@ -69,7 +69,7 @@ export default function Login() {
                     placeholder='Username' 
                     value={loginInfo.username} 
                     onChange={(e) => { setLoginInfo({...loginInfo, username: e.target.value }) }}
-                    className = "nes-input usrNm"
+                    className = "loginbutton nes-input usrNm"
                 />
 
                 <input 

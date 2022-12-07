@@ -88,7 +88,7 @@ export default function Dashboard() {
                     onChange={(e) => setRoomID(e.target.value) } 
                 />
                 <br />
-                <Flip><input className='nes-btn is-success' type="submit" value="Join Game" /></Flip>
+                <Flip><input className='joingamebtn nes-btn is-success' type="submit" value="Join Game" /></Flip>
             </form>
             <Flip><button className="nes-btn is-primary" onClick={() => setCreateGameModel(true)}>Create Game</button></Flip>
             </div>
