@@ -4,6 +4,7 @@ import { default as controls } from './controls';
 
 //* Assets
 import ghost from '../components/images/ghost.png'
+
 import TilesetFloor from './assets/level/TilesetFloor.png'
 import TilesetWater from './assets/level/TilesetWater.png'
 // import TilesetFloorDetail from './assets/level/TilesetFloorDetail.png'
@@ -11,6 +12,9 @@ import TilesetNature from './assets/level/TilesetNature.png'
 import TilesetHouse from './assets/level/TilesetHouse.png'
 // import TilesetReliefDetail from './assets/level/TilesetReliefDetail.png'
 import jsonMap from './assets/level/level_map.json'
+
+import fire from './assets/characters/fire1.png'
+import ninja from './assets/characters/ninja.png'
 
 export const propListSmall =[175, 176, 149, 132, 215, 202, 199]
 export const propListLarge =[0, 1, 5, 6, 48, 49, 50]
@@ -36,7 +40,9 @@ class GameScene extends Phaser.Scene {
         this.load.image('codey', 'https://content.codecademy.com/courses/learn-phaser/physics/codey.png');
         this.load.image('bug', 'https://content.codecademy.com/courses/learn-phaser/physics/bug_1.png');
         this.load.image('ghost', ghost)
-
+        // this.load.image('fire', fireGuy)
+        this.textures.addBase64('fire', fire)
+        this.textures.addBase64('ninja', ninja)
         this.load.spritesheet('natureSheet', TilesetNature, { frameWidth: 16, frameHeight: 16 });
         this.load.spritesheet('natureSheetLarge', TilesetNature, { frameWidth: 32, frameHeight: 32 });
         // this.load.spritesheet('characters', TilesetNature, { frameWidth: 32, frameHeight: 32 } )
@@ -98,10 +104,10 @@ class GameScene extends Phaser.Scene {
 
         this.listOfPlayers.forEach(id => {
             if (this.players[id].character === "seeker") {
-                this.players[id] = { ...this.players[id], sprite: this.physics.add.sprite(this.players[id].x, this.players[id].y, 'bug') }
+                this.players[id] = { ...this.players[id], sprite: this.physics.add.sprite(this.players[id].x, this.players[id].y, 'fire')}
                 // players[id].sprite.setScale(this.scaleSize)
             } else {
-                this.players[id] = { ...this.players[id], sprite: this.physics.add.sprite(this.players[id].x, this.players[id].y, 'codey') }
+                this.players[id] = { ...this.players[id], sprite: this.physics.add.sprite(this.players[id].x, this.players[id].y, 'ninja').setScale(1.5)}
             }
             this.players[id].sprite.setCollideWorldBounds(true);
             this.players[id].sprite.body.immovable = true
@@ -176,9 +182,23 @@ class GameScene extends Phaser.Scene {
                 }
             }
             
+            
         })
 
-
+        this.listOfPlayers.forEach(id => {
+            const listOfAlive = Object.values(this.players).filter(p => p.character !== "seeker")
+            let playersHiding = listOfAlive.length
+            let playersDead = 0
+            console.log("listOFAlive", listOfAlive)
+            console.log("playersHiding", playersHiding)
+            if (this.players[id].isAlive === false){
+                playersDead += 1
+                console.log("playersDied", playersDead)
+            }
+            if(playersDead === playersHiding){
+                socket.emit("redirectLobby", room)
+            }
+        })
         this.debug("update", delta, this.players[socket.id].sprite.body.speed)
     }
 
