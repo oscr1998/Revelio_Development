@@ -1,6 +1,6 @@
-import { React, useState } from "react";
+import { React, useState, useEffect } from "react";
 import { Login, Register, ForgotPwd, ResetPwd } from "../../components";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import "./style.css";
 import { Zoom, Flip } from "react-reveal";
 // import Modal from '../../components/Modal';
@@ -16,6 +16,15 @@ export default function Menu() {
   const [rpwdOpen, setrPwdOpen] = useState(false);
   const closerpwd = () => setrPwdOpen(false);
   const openrpwd = () => setrPwdOpen(true);
+
+  const navigate = useNavigate();
+  const isLogin = localStorage.getItem("isLogin")
+
+  useEffect(() => {
+    if(isLogin){
+      navigate('/dashboard')
+    }
+  },[isLogin])
 
   return (
     <div id="menuContainer">
@@ -62,7 +71,7 @@ export default function Menu() {
               onExitComplete={() => null}
             >
               {fpwdOpen && (
-                <ForgotPwd fpwdOpen={fpwdOpen} handleClose={closefpwd} />
+                <ForgotPwd fpwdOpen={fpwdOpen} handleClose={closefpwd} redirect={openrpwd}/>
               )}
             </AnimatePresence>
 
@@ -79,7 +88,7 @@ export default function Menu() {
               onExitComplete={() => null}
             >
               {rpwdOpen && (
-                <ResetPwd rpwdOpen={rpwdOpen} handleClose={closerpwd} />
+                <ResetPwd rpwdOpen={rpwdOpen} handleClose={closerpwd}/>
               )}
             </AnimatePresence>
           </div>
