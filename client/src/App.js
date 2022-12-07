@@ -4,10 +4,14 @@ import './style.css'
 import shuriken from './components/images/shuriken.png'
 //* Pages
 import { Menu, NotFound, Leaderboard, Dashboard, Lobby, Game } from './pages';
-
+import bG from './images/bG.png';
 
 function App() {
   return (
+    <div>
+      <div className='bGimg'>
+        <img src={bG}></img>
+      </div>
     <div className="App">
       {/* <div className="circlesContainer">
           {
@@ -22,6 +26,7 @@ function App() {
         <Route path="/leaderboard" element={<Leaderboard />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
+    </div>
     </div>
   );
 }

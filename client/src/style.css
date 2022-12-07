@@ -43,6 +43,13 @@ html, body {
 	top: 0px;
 }
 
+body{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    min-height: 100vh;
+
 .circles:nth-child(1) {
 	left: 25%;
 	width: 80px;
