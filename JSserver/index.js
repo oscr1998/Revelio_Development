@@ -89,6 +89,9 @@ io.on('connection', (socket) => {
         io.to(room).emit('update-client', players[room])
     })
 
+      socket.on("redirectLobby", ()=>{
+        io.to(room).emit('endGame')
+      })
     // socket.on('join-room', (room, coords, cb) => {
     //     socket.join(room)
 
@@ -113,7 +116,7 @@ io.on('connection', (socket) => {
     //     )
     // })
 
-
+  
     socket.on('disconnecting', () => {
         Array.from(socket.rooms).forEach(
             room => {

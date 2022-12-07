@@ -167,6 +167,7 @@ class GameScene extends Phaser.Scene {
         if (this.Timer <= 0) {
             //stop game and move to next scene
             this.countdown.destroy();
+            socket.emit("redirectLobby")
 
         }
     }

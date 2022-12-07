@@ -52,6 +52,7 @@ export default function controls(cursors, player, velocity, character, isAlive){
             let randomId = Math.floor(Math.random()*propListSmall.length)
             player.sprite.setTexture("natureSheet", propListSmall[randomId]).setScale(2).setSize(16, 16)
             console.log("small", randomId)
+            //socket.emit("changeSprite")
         }
         
         // player.sprite.setTexture("natureSheetLarge", 1)
