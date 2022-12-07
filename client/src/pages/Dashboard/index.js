@@ -115,7 +115,7 @@ export default function Dashboard() {
                 <h1>{localStorage.getItem('username')}</h1>
             </div>
             <div id='dashpart2'>
-                    <h2>Stats</h2>
+                    <h2 style={{ "marginBottom": "3vh" }}>Stats</h2>
                     <h3>Wins: {stats.wins}</h3>
                     <h3>Win rate: {stats.games_played === 0? 0 : stats.wins / stats.games_played * 100}%</h3>
                     <h3>Played: {stats.games_played}</h3>

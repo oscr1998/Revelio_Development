@@ -35,3 +35,16 @@
 .nes-btn::after {
     box-shadow: none;
 }
+
+#h1menu {
+    /* font-size: 10vw; */
+    font-style: italic;
+    /* opacity: 90%;  */
+    text-align: center;
+    font-size: 8rem;
+    padding: 30px;
+    /* color: #1D9099; */
+    color: #222222;
+    text-shadow: 5px 5px #E79C10, 10px 10px #D53A33;
+    letter-spacing: 10px;
+}

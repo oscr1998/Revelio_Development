@@ -79,7 +79,7 @@ export default function Login() {
                 />
 
 
-                <h3>{loginErrMsg}</h3>
+                <h3 style={{"color": "#D04E3E"}}>{loginErrMsg}</h3>
 
             <Flip><input id='loginbtn' type="submit" value="Login" className='nes-btn is-success'/></Flip>
         </form>
