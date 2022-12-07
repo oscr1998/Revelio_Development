@@ -108,7 +108,6 @@ class GameScene extends Phaser.Scene {
             this.physics.add.collider(this.blockedLayer, this.players[id].sprite)
         })
 
-
         // this.listOfPlayers.forEach(id => {
         //     if (!players[id].character === "seeker") {
         //         players[id] = { ...players[id], isAlive: true }
