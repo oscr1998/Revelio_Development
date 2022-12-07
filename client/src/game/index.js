@@ -165,7 +165,7 @@ class GameScene extends Phaser.Scene {
 
         this.listOfPlayers.forEach(id => {
             if (this.players[id].isAlive === false) {
-                this.players[id].sprite.setTexture('ghost').setScale(0.1).setOrigin(0.5)
+                this.players[id].sprite.setTexture('ghost').setScale(0.08).setOrigin(0.5).setAlpha(0.5).setSize(16, 16)
             }
             if(this.players[id].propIndices !== null){
                 if(this.players[id].propIndices[0] === 1){
