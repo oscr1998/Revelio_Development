@@ -29,7 +29,7 @@ io.on('connection', (socket) => {
         socket.join(room)
         console.log(`player ${socket.id} joined room ${room}`);
         cb({ id: socket.id, room: room })
-        if (!players[room]){
+        if (!players[room]) {
             players[room] = {}
         }
         players[room][socket.id] = {
@@ -39,7 +39,7 @@ io.on('connection', (socket) => {
         io.to(room).emit('update-room', players[room])
     })
 
-    socket.on('start-game', (room) =>{
+    socket.on('start-game', (room) => {
 
         // Algorithm to decide who is the seeker
         const listOfPlayers = Object.keys(players[room])    //["id1", "id2"]
@@ -48,28 +48,30 @@ io.on('connection', (socket) => {
 
         //Algorithm to decide each players' spawn location
         const coords = [
-            {x: 300, y:300 },
-            {x: 400, y:400 },
-            {x: 500, y:500 },
+            { x: 300, y: 300 },
+            { x: 400, y: 400 },
+            { x: 500, y: 500 },
         ]
         listOfPlayers.forEach((id, idx) => {
-            if (id === seekerID){
-                players[room][id] = { 
-                    ...players[room][id], 
-                    character: "seeker", 
-                    isAlive: true, 
-                    x: coords[idx].x, 
-                    y: coords[idx].y, 
-                    propIndices: null }
+            if (id === seekerID) {
+                players[room][id] = {
+                    ...players[room][id],
+                    character: "seeker",
+                    isAlive: true,
+                    x: coords[idx].x,
+                    y: coords[idx].y,
+                    propIndices: null
+                }
 
             } else {
-                players[room][id] = { 
-                    ...players[room][id], 
+                players[room][id] = {
+                    ...players[room][id],
                     character: "hider",
-                    isAlive: true, 
-                    x: coords[idx].x, 
-                    y: coords[idx].y, 
-                    propIndices: null }
+                    isAlive: true,
+                    x: coords[idx].x,
+                    y: coords[idx].y,
+                    propIndices: null
+                }
             }
         })
         io.to(room).emit('update-room', players[room])
@@ -95,6 +97,11 @@ io.on('connection', (socket) => {
         io.to(room).emit('update-client', players[room])
     })
 
+    socket.on("redirectLobby", (room) => {
+        console.log("END GAME**********")
+        io.to(room).emit('endGame')
+    })
+    
     //todo 
     socket.on("killed", (room) => {
         players[room][socket.id].isAlive = false
@@ -136,7 +143,7 @@ io.on('connection', (socket) => {
     socket.on('disconnecting', () => {
         Array.from(socket.rooms).forEach(
             room => {
-                if (room !== socket.id){
+                if (room !== socket.id) {
                     delete players[room][socket.id]
                     io.to(room).emit('update-room', players[room])
                     console.log(`player ${socket.id} left room ${room}`);

@@ -131,13 +131,16 @@ class GameScene extends Phaser.Scene {
     reduceTime() {
         this.Timer -= 1;
         this.timeMessage.setText("Timer: " + this.Timer);
+        console.log(this.Timer)
         if (this.Timer <= 0) {
             //stop game and move to next scene
+        
             this.countdown.destroy();
-
+            console.log("***********")
+            socket.emit("redirectLobby", room)
+            console.log("END GAME REACHED ***********")
         }
     }
-
 
     update(time, delta) {
         // Controls
