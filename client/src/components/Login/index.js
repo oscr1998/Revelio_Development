@@ -66,6 +66,7 @@ export default function Login() {
                     value={loginInfo.username} 
                     onChange={(e) => { setLoginInfo({...loginInfo, username: e.target.value }) }}
                     className = "loginbutton nes-input usrNm"
+                    id='loginInput'
                 />
 
                 <input 
@@ -75,6 +76,7 @@ export default function Login() {
                     value={loginInfo.password} 
                     onChange={(e) => { setLoginInfo({...loginInfo, password: e.target.value }) }} 
                     className = "nes-input usrNm"
+                    id='passwordInput'
                 />
 
 

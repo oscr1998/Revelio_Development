@@ -298,7 +298,7 @@ export const config = {
         arcade: {
             gravity: { y: 0 },
             enableBody: true,
-            debug: true
+            debug: false
         }
     },
     pixelArt: true,
