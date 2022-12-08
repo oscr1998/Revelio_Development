@@ -16,6 +16,8 @@ import fire from './assets/characters/fire1.png'
 import ninja from './assets/characters/ninja.png'
 import jsonMap2 from './assets/level2/level_map.json'
 
+import gameMusic from './assets/audio/game_song.mp3'
+
 export const propListSmall = [175, 176, 149, 132, 215, 202, 199]
 export const propListLarge = [0, 1, 5, 6, 48, 49, 50]
 // export const propListSmall =[176, 149, 132, 215, 202, 199
@@ -62,6 +64,8 @@ class GameScene extends Phaser.Scene {
         this.load.tilemapTiledJSON('map', jsonMap);
         this.load.tilemapTiledJSON('map2', jsonMap2)
 
+        this.load.audio('gameMusic', gameMusic)
+
         socket.on('update-client', players_server => {
 
             Object.keys(players_server).forEach(id => {
@@ -85,11 +89,16 @@ class GameScene extends Phaser.Scene {
     }
 
     create() {
+        // Create Map
         if(this.loadMap === 1){
             this.createMap1();
         } else if (this.loadMap === 2){
             this.createMap2();
         }
+
+        // Music
+        this.gameMusic = this.add.audio('gameMusic')
+        this.gameMusic.play();
         
         // Initialsed Controls
         this.cursors = this.input.keyboard.createCursorKeys();
@@ -186,8 +195,10 @@ class GameScene extends Phaser.Scene {
         if (this.Timer <= 0 || Object.values(this.players).filter(p => p.character === "hider" && p.isAlive === true).length === 0) {
             let results = this.Timer <= 0 ? "Hider" : "Seeker"
             this.countdown.destroy();
+            this.gameMusic.stop();
             this.game.destroy();
             socket.emit("endGame", room, results)
+
         }
         
 
