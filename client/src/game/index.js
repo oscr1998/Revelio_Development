@@ -3,16 +3,15 @@ import { socket, room } from '../pages/Dashboard/index'
 import { default as controls } from './controls';
 
 //* Assets
-import ghost from '../components/images/ghost.png'
-
 import TilesetFloor from './assets/level/TilesetFloor.png'
 import TilesetWater from './assets/level/TilesetWater.png'
-// import TilesetFloorDetail from './assets/level/TilesetFloorDetail.png'
+import TilesetFloorDetail from './assets/level/TilesetFloorDetail.png'
 import TilesetNature from './assets/level/TilesetNature.png'
 import TilesetHouse from './assets/level/TilesetHouse.png'
-// import TilesetReliefDetail from './assets/level/TilesetReliefDetail.png'
+import TilesetReliefDetail from './assets/level/TilesetReliefDetail.png'
 import jsonMap from './assets/level/level_map.json'
 
+import ghost from '../components/images/ghost.png'
 import fire from './assets/characters/fire1.png'
 import ninja from './assets/characters/ninja.png'
 import jsonMap2 from './assets/level2/level_map.json'
@@ -32,7 +31,6 @@ class GameScene extends Phaser.Scene {
         this.listOfPlayers = null
         this.listOfHiders = null
         this.listOfSeekers = null
-        this.velocity = 350
         this.scaleSize = 2;
         this.Timer = 60;
     }
@@ -54,12 +52,12 @@ class GameScene extends Phaser.Scene {
         this.load.image('water', TilesetWater)
 
         //************decoration layer*********** //
-        // this.load.image('floor', TilesetFloorDetail)
+        this.textures.addBase64('floor', TilesetFloorDetail)
 
         //************blocked layer*********** //
         this.load.image('nature', TilesetNature)
         this.load.image('house', TilesetHouse)
-        // this.load.image('mine', TilesetReliefDetail)
+        this.textures.addBase64('mine', TilesetReliefDetail)
         this.load.tilemapTiledJSON('map', jsonMap);
         this.load.tilemapTiledJSON('map2', jsonMap2)
 
@@ -150,7 +148,7 @@ class GameScene extends Phaser.Scene {
 
     update(time, delta) {
         // Controls
-        controls(this.cursors, this.players[socket.id], this.velocity, this.players[socket.id].character, this.players[socket.id].isAlive, time)
+        controls(this.cursors, this.players[socket.id], this.players[socket.id].velocity, this.players[socket.id].character, this.players[socket.id].isAlive, time)
 
         // update movement if Moved
         if (this.players[socket.id].moved) {

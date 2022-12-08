@@ -55,16 +55,15 @@ export default function CreateGame({
           exit="exit"
         >
           <div className="loginContainer createpopup nes-container is-centered">
-            <h1>Create Game</h1>
             <button
               onClick={() => {
                 setCreateGameModel(false);
                 return false;
               }}
-            >
-              x
-            </button>
+            >x</button>
             <br />
+            
+            <h1>Create Game</h1>
 
             {/* gamemode, roomsize, submitBtn */}
             <label id="maplabel">

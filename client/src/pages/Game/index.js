@@ -14,9 +14,10 @@ export default function Game() {
     const [results, setResults] = useState("KKKKKKKKKKKKKKKK")
 
     useEffect(() => {
-        socket.on("results", (results) => {
+        socket.on("results", results => {
             setResultsModal(true)
             setResults(results)
+            console.log(results);
             //todo send results to backend
         })
     }, [])
@@ -26,7 +27,7 @@ export default function Game() {
             <div id='gameContainer'>
                 <Bounce top> <IonPhaser game={config} initialize={true} /> </Bounce>
             </div>
-            {resultsModal? <Results handleClose={setResultsModal} resutls={results}/> : null}
+            {resultsModal? <Results handleClose={setResultsModal} results={results}/> : null}
         </div>
 
     )

@@ -58,6 +58,7 @@ io.on('connection', (socket) => {
                 players[room][id] = {
                     ...players[room][id],
                     character: "seeker",
+                    velocity: 500,
                     isAlive: true,
                     x: coords[idx].x,
                     y: coords[idx].y,
@@ -68,6 +69,7 @@ io.on('connection', (socket) => {
                 players[room][id] = {
                     ...players[room][id],
                     character: "hider",
+                    velocity: 350,
                     isAlive: true,
                     x: coords[idx].x,
                     y: coords[idx].y,
@@ -95,7 +97,6 @@ io.on('connection', (socket) => {
 
     socket.on("endGame", (room, results) => {
         io.to(room).emit('results', results)
-        console.log(results);
     })
     
     //todo 

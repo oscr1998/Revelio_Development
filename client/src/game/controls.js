@@ -52,7 +52,6 @@ export default function controls(cursors, player, velocity, character, isAlive, 
 
         if(lastFired < runTime - 100){
             lastFired = runTime
-            console.log("space pressed")
             const randomSize = Math.floor(Math.random()*2)
             let randomId;
     
@@ -61,10 +60,7 @@ export default function controls(cursors, player, velocity, character, isAlive, 
             }else{
                 randomId = Math.floor(Math.random()*propListLarge.length)}
             
-            console.log("RANDOM size", randomSize, "RANDOM id",randomId)
             socket.emit('changedProp', room, randomSize, randomId)
-    
-            console.log("sprite:", player.sprite)
         }
     }
 }

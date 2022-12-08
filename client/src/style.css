@@ -15,9 +15,10 @@ button, input {
 	/* width: 70% */
 }
 
-/* .closebtn{
+.closebtn {
 	display: flex;
-} */
+	align-self:flex-end
+}
 
 /* input {
 	width: 70%;
