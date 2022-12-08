@@ -40,7 +40,7 @@ io.on('connection', (socket) => {
     })
 
     socket.on('start-game', (room) => {
-
+        //
         // Algorithm to decide who is the seeker
         const listOfPlayers = Object.keys(players[room])    //["id1", "id2"]
         const seekerIdx = Math.floor(Math.random() * listOfPlayers.length)
@@ -60,8 +60,8 @@ io.on('connection', (socket) => {
                     character: "seeker",
                     velocity: 500,
                     isAlive: true,
-                    x: coords[idx].x,
-                    y: coords[idx].y,
+                    x: 300,
+                    y: 2000,
                     propIndices: null
                 }
 
