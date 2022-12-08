@@ -98,7 +98,15 @@ class GameScene extends Phaser.Scene {
 
         // Music
         this.gameMusic = this.add.audio('gameMusic')
-        this.gameMusic.play();
+        this.gameMusic.play({
+            mute: false,
+            volume: 0.01,
+            rate: 1,
+            detune: 0,
+            seek: 0,
+            loop: true,
+            delay: 0
+        });
         
         // Initialsed Controls
         this.cursors = this.input.keyboard.createCursorKeys();
