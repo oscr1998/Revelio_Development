@@ -1,5 +1,5 @@
 import Phaser from 'phaser';
-import { socket, room } from '../pages/Dashboard/index'
+import { socket, room } from '../pages/Lobby'
 import { default as controls } from './controls';
 
 //* Assets
@@ -35,7 +35,7 @@ class GameScene extends Phaser.Scene {
         this.listOfSeekers = null
         this.scaleSize = 2;
         this.Timer = 60;
-        this.loadMap = 1
+        this.loadMap = 2
     }
 
     preload() {

@@ -25,18 +25,34 @@ const players = {
 io.on('connection', (socket) => {
     console.log(`player ${socket.id} connected`);
 
-    socket.on('join-room', (room, cb) => {
-        socket.join(room)
-        console.log(`player ${socket.id} joined room ${room}`);
-        cb({ id: socket.id, room: room })
-        if (!players[room]) {
-            players[room] = {}
+    socket.on('join-room', (room, isHost, gameInfo, cb) => {
+        
+        // if not host and room does not exist
+        if (!isHost && Object.keys(players).filter(r => r === room).length === 0){
+            cb({ id: socket.id, room: null })
+        } else {
+            if(isHost){
+                console.log(`Host ${socket.id} has created room ${room}`);
+                players[room] = {}
+                players[room][socket.id] = {
+                    id: socket.id,
+                    username: "",
+                    isHost: isHost,
+                    gameInfo: gameInfo,
+                }
+            } else {
+                console.log(`player ${socket.id} joined room ${room}`);
+                players[room][socket.id] = {
+                    id: socket.id,
+                    username: "",
+                    isHost: isHost,
+                    gameInfo: Object.values(players[room]).filter(p => p.isHost === true)[0].gameInfo
+                } 
+            }
+            socket.join(room)
+            cb({ id: socket.id, room: room })
+            io.to(room).emit('update-room', players[room])
         }
-        players[room][socket.id] = {
-            id: socket.id,
-            username: "",
-        }
-        io.to(room).emit('update-room', players[room])
     })
 
     socket.on('start-game', (room) => {
@@ -97,9 +113,9 @@ io.on('connection', (socket) => {
 
     socket.on("endGame", (room, results) => {
         io.to(room).emit('results', results)
+        delete players[room]
     })
     
-    //todo 
     socket.on("killed", (room, H_id) => {
         players[room][H_id].isAlive = false
         players[room][H_id].propIndices = null
@@ -111,10 +127,24 @@ io.on('connection', (socket) => {
         io.to(room).emit('update-client', players[room])
     })
 
+    //!
+    socket.on('exit-all-rooms', () => {
+        Array.from(socket.rooms).forEach(
+            room => {
+                if (room !== socket.id && players[room]) {
+                    socket.leave(room)
+                    delete players[room][socket.id]
+                    io.to(room).emit('update-room', players[room])
+                    console.log(`player ${socket.id} left room ${room}`);
+                }
+            }
+        )
+    })
+
     socket.on('disconnecting', () => {
         Array.from(socket.rooms).forEach(
             room => {
-                if (room !== socket.id) {
+                if (room !== socket.id && players[room]) {
                     delete players[room][socket.id]
                     io.to(room).emit('update-room', players[room])
                     console.log(`player ${socket.id} left room ${room}`);
