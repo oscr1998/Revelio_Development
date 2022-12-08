@@ -50,7 +50,7 @@ export default function controls(cursors, player, velocity, character, isAlive, 
     }
     if ((cursors.space.isDown) && character === "hider" && isAlive === true ) {
 
-        if(lastFired < runTime - 1000){
+        if(lastFired < runTime - 100){
             lastFired = runTime
             console.log("space pressed")
             const randomSize = Math.floor(Math.random()*2)

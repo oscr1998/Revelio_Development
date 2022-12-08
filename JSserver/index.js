@@ -93,9 +93,9 @@ io.on('connection', (socket) => {
         io.to(room).emit('update-client', players[room])
     })
 
-    socket.on("redirectLobby", (room) => {
-        console.log("END GAME**********")
-        io.to(room).emit('endGame')
+    socket.on("endGame", (room, results) => {
+        io.to(room).emit('results', results)
+        console.log(results);
     })
     
     //todo 

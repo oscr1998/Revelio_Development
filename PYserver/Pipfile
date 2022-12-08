@@ -17,5 +17,5 @@ flask-mail = "*"
 python_version = "3.10"
 
 [scripts]
-dev = "py app.py"
-init_db = "py init_db.py"
+dev = "python app.py"
+init_db = "python init_db.py"

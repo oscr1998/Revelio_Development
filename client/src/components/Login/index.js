@@ -67,6 +67,7 @@ export default function Login() {
                     value={loginInfo.username} 
                     onChange={(e) => { setLoginInfo({...loginInfo, username: e.target.value }) }}
                     className = "loginbutton nes-input usrNm"
+                    id='loginInput'
                 />
 
                 <input 
@@ -76,10 +77,11 @@ export default function Login() {
                     value={loginInfo.password} 
                     onChange={(e) => { setLoginInfo({...loginInfo, password: e.target.value }) }} 
                     className = "nes-input usrNm"
+                    id='passwordInput'
                 />
 
 
-                <h3>{loginErrMsg}</h3>
+                <h3 style={{"color": "#D04E3E"}}>{loginErrMsg}</h3>
 
             <Flip><input id='loginbtn' type="submit" value="Login" className='nes-btn is-success'/></Flip>
         </form>

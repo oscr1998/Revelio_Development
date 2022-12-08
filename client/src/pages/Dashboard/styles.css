@@ -17,6 +17,7 @@
 
 #h1dashboard {
     margin: 0;
+    border: 2px #000000 solid;
 }
 
 #dashpart1 {
@@ -25,8 +26,10 @@
 }
 
 #dashpart2 {
+    margin-left: 3vw;
     display: flex;
-    justify-content: center;
+    flex-direction: column;
+    justify-content: start;
     align-items: center;
     flex: 1;
 }

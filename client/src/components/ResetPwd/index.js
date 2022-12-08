@@ -76,9 +76,9 @@ export default function ResetPwd({ handleClose }) {
         exit="exit"
       >
         <form id="resetpwdForm" onSubmit={handleResetPwd}>
-          <h1 id="reseth1">Reset Password</h1>
-
           <button className='closebtn' onClick={handleClose}>x</button>
+
+          <h1 id="reseth1">Reset Password</h1>
 
           <label>
             <input

@@ -28,7 +28,8 @@ export default function Menu() {
 
   return (
     <div id="menuContainer">
-      <h1 id="h1menu">Logo</h1>
+      {/* <h1 id="h1menu">{"\"Revelio\""}</h1> */}
+      <h1 id="h1menu">Revelio</h1>
       <Zoom>
         <div className="loginContainer nes-container is-centered">
           <Login />

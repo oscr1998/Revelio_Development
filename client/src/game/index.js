@@ -3,7 +3,7 @@ import { socket, room } from '../pages/Dashboard/index'
 import { default as controls } from './controls';
 
 //* Assets
-import ghost from '../components/images/ghost.png'
+import ghost from '../compnents/images/ghost.png'
 
 import TilesetFloor from './assets/level/TilesetFloor.png'
 import TilesetWater from './assets/level/TilesetWater.png'
@@ -169,17 +169,7 @@ class GameScene extends Phaser.Scene {
 
     reduceTime() {
         this.Timer -= 1;
-        this.timeMessage.setText("Timer: " + this.Timer);
-        console.log(this.Timer)
-        if (this.Timer <= 0) {
-            //stop game and move to next scene
-
-            this.countdown.destroy();
-            this.music.stop();
-            console.log("***********")
-            socket.emit("redirectLobby", room)
-            console.log("END GAME REACHED ***********")
-        }
+        this.timeMessage.setText("Timer: " + this.Timer);        
     }
 
     update(time, delta) {
@@ -207,8 +197,15 @@ class GameScene extends Phaser.Scene {
                     this.players[id].sprite.setTexture("natureSheet", propListSmall[this.players[id].propIndices[1]]).setScale(2).setSize(16, 16)
                 }
             }
-
         })
+
+        if (this.Timer <= 0 || Object.values(this.players).filter(p => p.character === "hider" && p.isAlive === true).length === 0) {
+            let results = this.Timer <= 0 ? "Hider" : "Seeker"
+            this.countdown.destroy();
+            this.music.stop();
+            this.game.destroy();
+            socket.emit("endGame", room, results)
+        }
 
 
         this.debug("update", delta, this.players[socket.id].sprite.body.speed)

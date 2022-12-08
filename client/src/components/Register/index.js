@@ -88,11 +88,9 @@ export default function Register({ handleClose }) {
         className="motiondiv"
       >
         <form id="registerForm" onSubmit={handelRegister}>
-          <h1 id="registerh1">Register</h1>
+          <button className="closebtn" onClick={handleClose}>x</button>
 
-          <button className="closebtn" onClick={handleClose}>
-            x
-          </button>
+          <h1 id="registerh1">Register</h1>
 
           <label>
             <input
