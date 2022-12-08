@@ -177,10 +177,12 @@ class GameScene extends Phaser.Scene {
 
         //* Check end game condition
         // Time's up, zero hiders survivors
+
         if (this.Timer <= 0 || Object.values(this.players).filter(p => p.character === "hider" && p.isAlive === true).length === 0) {
+            let results = this.Timer <= 0 ? "Hider" : "Seeker"
             this.countdown.destroy();
             this.game.destroy();
-            socket.emit("redirectLobby", room)
+            socket.emit("endGame", room, results)
         }
         
 

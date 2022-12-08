@@ -5,19 +5,19 @@ import { Bounce } from 'react-reveal'
 import './style.css'
 
 import { useSelector } from 'react-redux'
-import { useNavigate } from 'react-router-dom'
 import { Results } from '../../components'
 
 export default function Game() {
 
-    const navigate = useNavigate()
     const socket = useSelector(state => state.socket.socket)
     const [resultsModal, setResultsModal] = useState(false)
+    const [results, setResults] = useState("KKKKKKKKKKKKKKKK")
 
     useEffect(() => {
-        socket.on("endGame", () => {
+        socket.on("results", (results) => {
             setResultsModal(true)
-            // navigate("/dashboard")
+            setResults(results)
+            //todo send results to backend
         })
     }, [])
 
@@ -26,7 +26,7 @@ export default function Game() {
             <div id='gameContainer'>
                 <Bounce top> <IonPhaser game={config} initialize={true} /> </Bounce>
             </div>
-            {resultsModal? <Results handleClose={setResultsModal}/> : null}
+            {resultsModal? <Results handleClose={setResultsModal} resutls={results}/> : null}
         </div>
 
     )
