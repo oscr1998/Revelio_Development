@@ -33,6 +33,7 @@ class GameScene extends Phaser.Scene {
         this.listOfSeekers = null
         this.scaleSize = 2;
         this.Timer = 60;
+        this.loadMap = 1
     }
 
     preload() {
@@ -84,7 +85,11 @@ class GameScene extends Phaser.Scene {
     }
 
     create() {
-        this.createMap();
+        if(this.loadMap === 1){
+            this.createMap1();
+        } else if (this.loadMap === 2){
+            this.createMap2();
+        }
         
         // Initialsed Controls
         this.cursors = this.input.keyboard.createCursorKeys();
@@ -110,8 +115,11 @@ class GameScene extends Phaser.Scene {
             }
             this.players[id].sprite.setCollideWorldBounds(true);
             this.players[id].sprite.body.immovable = true
-            //this.physics.add.collider(this.blockedLayer, this.players[id].sprite)
-            this.physics.add.collider(this.blockedLayer2, this.players[id].sprite)
+            if(this.loadMap === 1){
+                this.physics.add.collider(this.blockedLayer, this.players[id].sprite)
+            } else if (this.loadMap === 2){
+                this.physics.add.collider(this.blockedLayer2, this.players[id].sprite)
+            }
         })
 
 
@@ -174,8 +182,7 @@ class GameScene extends Phaser.Scene {
         })
 
         //* Check end game condition
-        // Time's up, zero hiders survivors
-
+        // Time's up OR zero hiders survived
         if (this.Timer <= 0 || Object.values(this.players).filter(p => p.character === "hider" && p.isAlive === true).length === 0) {
             let results = this.Timer <= 0 ? "Hider" : "Seeker"
             this.countdown.destroy();
@@ -202,57 +209,57 @@ class GameScene extends Phaser.Scene {
         }
     }
 
-    // createMap() {
+    createMap1() {
 
-    //     //create tile map 
-    //     // this.add.image(0, 0, "background")
-    //     this.levelMap = this.make.tilemap({ key: 'map' });
+        //create tile map 
+        // this.add.image(0, 0, "background")
+        this.levelMap = this.make.tilemap({ key: 'map' });
 
-    //     /**
-    //      * add tileset image to map 
-    //      * first arg name in json. 2nd arg name in this.load.image
-    //     **/
+        /**
+         * add tileset image to map 
+         * first arg name in json. 2nd arg name in this.load.image
+        **/
 
-    //     //adding tileset for background layer
-    //     this.tiles = this.levelMap.addTilesetImage('TilesetFloor', 'background')
-    //     this.waterTiles = this.levelMap.addTilesetImage('TilesetWater', 'water')
+        //adding tileset for background layer
+        this.tiles = this.levelMap.addTilesetImage('TilesetFloor', 'background')
+        this.waterTiles = this.levelMap.addTilesetImage('TilesetWater', 'water')
 
-    //     //adding tileset for blocked layer
-    //     // this.blockedTiles = this.map.addTilesetImage('TilesetFloor', 'borders')
-    //     this.nature = this.levelMap.addTilesetImage('TilesetNature', 'nature')
-    //     this.house = this.levelMap.addTilesetImage('TilesetHouse', 'house')
-    //     this.mine = this.levelMap.addTilesetImage('TilesetReliefDetail', 'mine')
+        //adding tileset for blocked layer
+        // this.blockedTiles = this.map.addTilesetImage('TilesetFloor', 'borders')
+        this.nature = this.levelMap.addTilesetImage('TilesetNature', 'nature')
+        this.house = this.levelMap.addTilesetImage('TilesetHouse', 'house')
+        this.mine = this.levelMap.addTilesetImage('TilesetReliefDetail', 'mine')
 
-    //     //adding tileset for decoration layer
-    //     this.floorDetailTiles = this.levelMap.addTilesetImage('TilesetFloorDetail', 'floor')
-    //     //this.seaTiles = this.map.addTilesetImage('TilesetWater', 'water')
+        //adding tileset for decoration layer
+        this.floorDetailTiles = this.levelMap.addTilesetImage('TilesetFloorDetail', 'floor')
+        //this.seaTiles = this.map.addTilesetImage('TilesetWater', 'water')
 
 
-    //     //first arg = layer name on tiled 
-    //     this.backgroundLayer = this.levelMap.createLayer('background', [this.waterTiles, this.tiles])
-    //     this.blockedLayer = this.levelMap.createLayer('blocked', [this.nature, this.house, this.mine, this.waterTiles])
-    //     this.decorationLayer = this.levelMap.createLayer('background_decorations', [this.floorDetailTiles, this.seaTiles, this.house, this.waterTiles, this.nature])
+        //first arg = layer name on tiled 
+        this.backgroundLayer = this.levelMap.createLayer('background', [this.waterTiles, this.tiles])
+        this.blockedLayer = this.levelMap.createLayer('blocked', [this.nature, this.house, this.mine, this.waterTiles])
+        this.decorationLayer = this.levelMap.createLayer('background_decorations', [this.floorDetailTiles, this.seaTiles, this.house, this.waterTiles, this.nature])
 
-    //     //add collisions for blocked layer
-    //     this.blockedLayer.setCollisionByExclusion([-1]);
+        //add collisions for blocked layer
+        this.blockedLayer.setCollisionByExclusion([-1]);
 
-    //     //scaling map 
-    //     this.backgroundLayer.setScale(this.scaleSize)
-    //     this.decorationLayer.setScale(this.scaleSize)
-    //     this.blockedLayer.setScale(this.scaleSize)
+        //scaling map 
+        this.backgroundLayer.setScale(this.scaleSize)
+        this.decorationLayer.setScale(this.scaleSize)
+        this.blockedLayer.setScale(this.scaleSize)
 
-    //     //update world bounds
-    //     this.physics.world.bounds.width = this.levelMap.widthInPixels * this.scaleSize;
-    //     this.physics.world.bounds.height = this.levelMap.heightInPixels * this.scaleSize;
+        //update world bounds
+        this.physics.world.bounds.width = this.levelMap.widthInPixels * this.scaleSize;
+        this.physics.world.bounds.height = this.levelMap.heightInPixels * this.scaleSize;
 
-    //     // limit the camera to the size of our map
-    //     this.cameras.main.setBounds(0, 0,
-    //         this.levelMap.widthInPixels * this.scaleSize,
-    //         this.levelMap.heightInPixels * this.scaleSize
-    //     );
-    // }
+        // limit the camera to the size of our map
+        this.cameras.main.setBounds(0, 0,
+            this.levelMap.widthInPixels * this.scaleSize,
+            this.levelMap.heightInPixels * this.scaleSize
+        );
+    }
 
-    createMap() {
+    createMap2() {
         this.levelMap2 = this.make.tilemap({ key: 'map2' });
 
         this.tiles2 = this.levelMap2.addTilesetImage('TilesetFloor', 'background')
