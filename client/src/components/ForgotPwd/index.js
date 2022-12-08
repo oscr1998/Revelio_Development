@@ -67,9 +67,9 @@ export default function ForgotPwd({ handleClose, redirect }) {
         className="forgotpwdcontainer"
       >
         <form id="forgotpwdForm" onSubmit={handleForgotPwd}>
-          <h1 id="forgoth1">Forgot Password</h1>
-
           <button className="closebtn" onClick={handleClose}>x</button>
+
+          <h1 id="forgoth1">Forgot Password</h1>
 
           <label>
             <input

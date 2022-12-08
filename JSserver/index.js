@@ -94,7 +94,6 @@ io.on('connection', (socket) => {
     })
 
     socket.on("redirectLobby", (room) => {
-        console.log("END GAME**********")
         io.to(room).emit('endGame')
     })
     

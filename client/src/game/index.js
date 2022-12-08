@@ -56,7 +56,6 @@ class GameScene extends Phaser.Scene {
         //************decoration layer*********** //
         // this.load.image('floor', TilesetFloorDetail)
 
-
         //************blocked layer*********** //
         this.load.image('nature', TilesetNature)
         this.load.image('house', TilesetHouse)
@@ -146,16 +145,7 @@ class GameScene extends Phaser.Scene {
 
     reduceTime() {
         this.Timer -= 1;
-        this.timeMessage.setText("Timer: " + this.Timer);
-        console.log(this.Timer)
-        if (this.Timer <= 0) {
-            //stop game and move to next scene
-
-            this.countdown.destroy();
-            console.log("***********")
-            socket.emit("redirectLobby", room)
-            console.log("END GAME REACHED ***********")
-        }
+        this.timeMessage.setText("Timer: " + this.Timer);        
     }
 
     update(time, delta) {
@@ -184,6 +174,15 @@ class GameScene extends Phaser.Scene {
             }
             
         })
+
+        //* Check end game condition
+        // Time's up, zero hiders survivors
+        if (this.Timer <= 0 || Object.values(this.players).filter(p => p.character === "hider" && p.isAlive === true).length === 0) {
+            this.countdown.destroy();
+            this.game.destroy();
+            socket.emit("redirectLobby", room)
+        }
+        
 
 
         this.debug("update", delta, this.players[socket.id].sprite.body.speed)
