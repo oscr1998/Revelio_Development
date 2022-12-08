@@ -97,7 +97,7 @@ class GameScene extends Phaser.Scene {
         }
 
         // Music
-        this.gameMusic = this.add.audio('gameMusic')
+        this.gameMusic = this.sound.add('gameMusic')
         this.gameMusic.play({
             mute: false,
             volume: 0.01,
