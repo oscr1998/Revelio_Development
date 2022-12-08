@@ -89,7 +89,7 @@ class GameScene extends Phaser.Scene {
 
     create() {
         this.createMap();
-        this.gameMusic = this.add.audio('gameMusic')
+        this.gameMusic = this.sound.add('gameMusic')
         this.gameMusic.play({
             mute: false,
             volume: 0.01,
