@@ -3,7 +3,7 @@ import { socket, room } from '../pages/Dashboard/index'
 import { default as controls } from './controls';
 
 //* Assets
-import ghost from '../compnents/images/ghost.png'
+import ghost from '../components/images/ghost.png'
 
 import TilesetFloor from './assets/level/TilesetFloor.png'
 import TilesetWater from './assets/level/TilesetWater.png'
@@ -96,6 +96,7 @@ class GameScene extends Phaser.Scene {
 
     create() {
         this.createMap();
+        
         this.loseSound = this.sound.add("loseSound")
         this.winSound = this.sound.add("winSound")
         this.music = this.sound.add("gameMusic");
