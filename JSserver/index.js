@@ -59,8 +59,8 @@ io.on('connection', (socket) => {
                     ...players[room][id],
                     character: "seeker",
                     isAlive: true,
-                    x: coords[idx].x,
-                    y: coords[idx].y,
+                    x: 300,
+                    y: 2000,
                     propIndices: null
                 }
 

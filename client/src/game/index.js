@@ -17,6 +17,10 @@ import fire from './assets/characters/fire1.png'
 import ninja from './assets/characters/ninja.png'
 import jsonMap2 from './assets/level2/level_map.json'
 
+import gameMusic from './assets/audio/game_song.mp3'
+import loseSound from './assets/audio/lose.mp3'
+import winSound from './assets/audio/coin.mp3'
+
 export const propListSmall = [175, 176, 149, 132, 215, 202, 199]
 export const propListLarge = [0, 1, 5, 6, 48, 49, 50]
 // export const propListSmall =[176, 149, 132, 215, 202, 199
@@ -64,6 +68,10 @@ class GameScene extends Phaser.Scene {
         this.load.tilemapTiledJSON('map', jsonMap);
         this.load.tilemapTiledJSON('map2', jsonMap2)
 
+        this.load.audio('gameMusic', gameMusic)
+        this.load.audio('loseSound', loseSound)
+        this.load.audio('winSound', winSound)
+
         socket.on('update-client', players_server => {
 
             Object.keys(players_server).forEach(id => {
@@ -74,7 +82,7 @@ class GameScene extends Phaser.Scene {
                 } else {
                     // If the list already exists locally, update players list, expect the sprite
                     this.players[id] = { ...players_server[id], sprite: this.players[id].sprite }
-                    if(id !== socket.id) {
+                    if (id !== socket.id) {
                         // Update others player's live coords
                         this.players[id].sprite.x = players_server[id].x
                         this.players[id].sprite.y = players_server[id].y
@@ -88,7 +96,18 @@ class GameScene extends Phaser.Scene {
 
     create() {
         this.createMap();
-        
+        this.loseSound = this.sound.add("loseSound")
+        this.winSound = this.sound.add("winSound")
+        this.music = this.sound.add("gameMusic");
+        this.music.play({
+            mute: false,
+            volume: 0.02,
+            rate: 1,
+            detune: 0,
+            seek: 0,
+            loop: true,
+            delay: 0
+        });
         // Initialsed Controls
         this.cursors = this.input.keyboard.createCursorKeys();
 
@@ -106,10 +125,10 @@ class GameScene extends Phaser.Scene {
         // Add sprites for every player depends on their character type
         this.listOfPlayers.forEach(id => {
             if (this.players[id].character === "seeker") {
-                this.players[id] = { ...this.players[id], sprite: this.physics.add.sprite(this.players[id].x, this.players[id].y, 'fire').setSize(16,24)}
+                this.players[id] = { ...this.players[id], sprite: this.physics.add.sprite(this.players[id].x, this.players[id].y, 'fire').setSize(16, 24) }
                 // players[id].sprite.setScale(this.scaleSize)
             } else {
-                this.players[id] = { ...this.players[id], sprite: this.physics.add.sprite(this.players[id].x, this.players[id].y, 'ninja').setScale(1.5)}
+                this.players[id] = { ...this.players[id], sprite: this.physics.add.sprite(this.players[id].x, this.players[id].y, 'ninja').setScale(1.5) }
             }
             this.players[id].sprite.setCollideWorldBounds(true);
             this.players[id].sprite.body.immovable = true
@@ -132,8 +151,12 @@ class GameScene extends Phaser.Scene {
         this.listOfSeekers.forEach(S => {
             this.listOfHiders.forEach(H => {
                 this.physics.add.collider(S.sprite, H.sprite, () => {
-                    if( H.isAlive === true){
-                        socket.emit('killed', room, H.id )
+                    if (H.isAlive === true) {
+                        if (S.sprite) {
+                            this.winSound.play();
+                        }
+
+                        socket.emit('killed', room, H.id)
                     }
                 })
             })
@@ -152,6 +175,7 @@ class GameScene extends Phaser.Scene {
             //stop game and move to next scene
 
             this.countdown.destroy();
+            this.music.stop();
             console.log("***********")
             socket.emit("redirectLobby", room)
             console.log("END GAME REACHED ***********")
@@ -174,6 +198,7 @@ class GameScene extends Phaser.Scene {
         this.listOfPlayers.forEach(id => {
             if (this.players[id].isAlive === false) {
                 this.players[id].sprite.setTexture('ghost').setScale(0.08).setOrigin(0.5).setAlpha(0.5).setSize(16, 16)
+                
             }
             if (this.players[id].propIndices !== null) {
                 if (this.players[id].propIndices[0] === 1) {
@@ -182,7 +207,7 @@ class GameScene extends Phaser.Scene {
                     this.players[id].sprite.setTexture("natureSheet", propListSmall[this.players[id].propIndices[1]]).setScale(2).setSize(16, 16)
                 }
             }
-            
+
         })
 
 
@@ -268,8 +293,7 @@ class GameScene extends Phaser.Scene {
 
         this.blockedLayer2.setCollisionByExclusion([-1]);
 
-
-         //scaling map 
+        //scaling map 
         this.backgroundLayer2.setScale(this.scaleSize)
         this.decorationLayer2.setScale(this.scaleSize)
         this.blockedLayer2.setScale(this.scaleSize)
